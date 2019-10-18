@@ -1,16 +1,11 @@
-# grouply
+# Grouply
 
-An app for planning trips together.
+Mit der Grouply App soll es Freunden, mittleren bis großen Reisegruppen oder einfach zerstreuten Menschen einfach gemacht werden, größere Reiseplanungen zu organisieren und die Kosten im Auge zu behalten.  
 
-## Getting Started
+## Installationsanleitung für die Entwicklung
 
-This project is a starting point for a Flutter application.
+Diese App wird mit [Dart](https://dart.dev/) und dem [Flutter Framework](https://flutter.dev/) geschrieben. Um an der Entwicklung teilnehmen zu können, ist es ratsam den ["Get Started"](https://flutter.dev/docs/get-started/install) Abschnitt der Flutter Dokumentation zu folgen. Es ist nicht zwingend notwendig Android Studio für die Entwicklung installiert zu haben, jedoch verringert das Programm doch um einiges den Aufwand (beispielsweise bei der Erstellung eines [AVD](# "Android Virtual Device").
 
-A few resources to get you started if this is your first Flutter project:
+## Weitere Informationen
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Weitere Informationen findet man im  [Wiki](https://github.com/bertaframion/Grouply/wiki). Fügt gerne auch selbst Dokumente hinzu oder bearbeitet Bestehendes.
