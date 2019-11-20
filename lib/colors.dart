@@ -10,12 +10,15 @@ const soyaBean = const Color(0xFF5F5448);
 
 // Specify the use and reuse of the variables above
 const primaryColor = tealBlue;
-const seconaryColor = blueLagoon;
-const backgroundColor = blackWhite;
+const cardColor = blackWhite;
+const backgroundColor = blueLagoon;
 const warningColor = pomegranate;
-const alternativeColor = soyaBean;
-
 
 // Declare themes
 // TODO: Remove temporary theme any apply above colors
-final ThemeData retroTheme = ThemeData.light();
+final ThemeData retroTheme = ThemeData.light().copyWith(
+  scaffoldBackgroundColor: backgroundColor,
+  cardColor: cardColor,
+  primaryColor: primaryColor,
+  errorColor: warningColor, 
+);
