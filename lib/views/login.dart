@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../colors.dart' as colors;
+import '../components/login_form.dart';
 
 // TODO: extract the login functionality into a component
 // TODO: make login view stateful to save userID in the process
@@ -8,52 +9,31 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: colors.primaryColor,
-        body: Center(
-          child: Container(
-            width: 280,
-            height: 320,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.white, width: 1),
+      backgroundColor: colors.primaryColor,
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Grouply',
+              style: TextStyle(
+                fontSize: 72,
+                fontFamily: 'Pacifico',
+                fontWeight: FontWeight.w500,
+                color: colors.cardColor,
+              ),
             ),
-            child: Stack(
-              children: <Widget>[
-                Align(
-                  alignment: AlignmentDirectional.topCenter,
-                  child: Text(
-                    'Grouply',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'Pacifico',
-                      fontSize: 72,
-                      color: colors.cardColor,
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: AlignmentDirectional.bottomCenter,
-                  child: Form(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        TextFormField(
-                          decoration: InputDecoration(
-                            hintText: 'Username',
-                          ),
-                        ),
-                        TextFormField(
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            hintText: 'Password',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+            Container(
+              margin: EdgeInsets.only(
+                top: 40,
+              ),
+              child: LoginForm(),
             ),
-          ),
-        ));
+          ],
+        ),
+      ),
+    );
   }
 }
