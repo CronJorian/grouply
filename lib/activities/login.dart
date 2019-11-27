@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../colors.dart' as colors;
-import '../components/login_form.dart';
+import '../views/login_form.dart';
 
-// TODO: extract the login functionality into a component
 // TODO: make login view stateful to save userID in the process
 class Login extends StatelessWidget {
   @override
