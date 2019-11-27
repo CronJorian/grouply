@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pedantic/pedantic.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../colors.dart' as colors;
 
@@ -15,8 +15,7 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  String _email, _password;
 
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
 
@@ -54,7 +53,7 @@ class _LoginFormState extends State<LoginForm> {
                 ),
               ),
               // TODO: add validator for email
-              controller: _emailController,
+              onSaved: (input) => _email = input,
             ),
             margin: EdgeInsets.only(bottom: 16),
           ),
@@ -86,7 +85,7 @@ class _LoginFormState extends State<LoginForm> {
                 ),
               ),
               // TODO: add validator for password
-              controller: _passwordController,
+              onSaved: (input) => _password = input,
             ),
           ),
           Row(
@@ -99,10 +98,7 @@ class _LoginFormState extends State<LoginForm> {
                     style: TextStyle(),
                   ),
                   // TODO: Add functionality to clear input fields
-                  onPressed: () {
-                    _emailController.clear();
-                    _passwordController.clear();
-                  },
+                  onPressed: () {},
                 ),
                 margin: EdgeInsets.only(
                   right: 16,
@@ -132,13 +128,13 @@ class _LoginFormState extends State<LoginForm> {
     // TODO: validate user
     final loginFormState = _loginFormKey.currentState;
     // https://pub.dev/packages/firebase_auth
-    // final FirebaseAuth _auth = FirebaseAuth.instance;
+    final FirebaseAuth _auth = FirebaseAuth.instance;
     if (loginFormState.validate()) {
       loginFormState.save();
       try {
-        // FirebaseUser userData = (await _auth.signInWithEmailAndPassword(email: _emailController.toString(), password: _passwordController.toString())).user;
+        FirebaseUser userData = (await _auth.signInWithEmailAndPassword(email: _email, password: _password)).user;
         // * WARNING: `unawaited` might cause a problem
-        unawaited(Navigator.pushNamed(context, '/home'));
+        unawaited(Navigator.pushNamed(context, '/homeTest'));
       } catch (e) {
         print(e.message);
       }
