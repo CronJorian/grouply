@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grouply/activities/home.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -132,9 +133,21 @@ class _LoginFormState extends State<LoginForm> {
     if (loginFormState.validate()) {
       loginFormState.save();
       try {
-        FirebaseUser userData = (await _auth.signInWithEmailAndPassword(email: _email, password: _password)).user;
+        FirebaseUser userData = (await _auth.signInWithEmailAndPassword(
+                email: _email, password: _password))
+            .user;
         // * WARNING: `unawaited` might cause a problem
-        unawaited(Navigator.pushNamed(context, '/homeTest'));
+        unawaited(
+          // TODO: Either change this so a named route or change the app.dart file. It would probably be better to change this route and outsource it to the app.dart, where all routes are written.
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomeScreenTest(
+                user: userData,
+              ),
+            ),
+          ),
+        );
       } catch (e) {
         print(e.message);
       }
