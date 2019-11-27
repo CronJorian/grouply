@@ -23,3 +23,9 @@ Der `lib/` Ordner unterteilt sich in `lib/views/` und `lib/components/`. Unter `
 ## Weitere Informationen
 
 Weitere Informationen findet man im  [Wiki](https://github.com/bertaframion/Grouply/wiki). Fügt gerne auch selbst Dokumente hinzu oder bearbeitet Bestehendes.
+
+## Projektboard
+
+Bei Trello wurde ein neues Projektboard erstellt. Über den folgenden Link, kann beigetreten werden.
+https://trello.com/invite/b/CakzO3Kd/2c6bd74e5bfd707267fed286e6776f64/ebusiness
+
