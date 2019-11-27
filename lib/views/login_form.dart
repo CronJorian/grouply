@@ -16,7 +16,8 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  String _email, _password;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
 
@@ -54,7 +55,7 @@ class _LoginFormState extends State<LoginForm> {
                 ),
               ),
               // TODO: add validator for email
-              onSaved: (input) => _email = input,
+              controller: _emailController,
             ),
             margin: EdgeInsets.only(bottom: 16),
           ),
@@ -86,7 +87,7 @@ class _LoginFormState extends State<LoginForm> {
                 ),
               ),
               // TODO: add validator for password
-              onSaved: (input) => _password = input,
+              controller: _passwordController,
             ),
           ),
           Row(
@@ -98,8 +99,10 @@ class _LoginFormState extends State<LoginForm> {
                     'CANCEL',
                     style: TextStyle(),
                   ),
-                  // TODO: Add functionality to clear input fields
-                  onPressed: () {},
+                  onPressed: () {
+                    _emailController.clear();
+                    _passwordController.clear();
+                  },
                 ),
                 margin: EdgeInsets.only(
                   right: 16,
@@ -134,7 +137,7 @@ class _LoginFormState extends State<LoginForm> {
       loginFormState.save();
       try {
         FirebaseUser userData = (await _auth.signInWithEmailAndPassword(
-                email: _email, password: _password))
+                email: _emailController.text, password: _passwordController.text))
             .user;
         // * WARNING: `unawaited` might cause a problem
         unawaited(
