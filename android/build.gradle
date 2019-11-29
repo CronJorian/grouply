@@ -8,6 +8,8 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        // TODO: Update back to 4.3.0 as soon as firebase issue is resolved (see wiki)
+        classpath 'com.google.gms:google-services:3.2.1'
     }
 }
 

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'colors.dart';
-import 'views/login.dart';
-import 'views/todo.dart';
+import 'activities/home.dart';
+import 'activities/login.dart';
+import 'activities/todo.dart';
 
 class GrouplyApp extends StatelessWidget {
   @override
@@ -20,6 +21,7 @@ class GrouplyApp extends StatelessWidget {
         // you don't need to fully read these, but make sure you understand how to navigate
         '/login': (context) => Login(),
         '/todolist': (context) => TodoList(), 
+        '/homeTest': (context) => HomeScreenTest(),
       },
     );
   }
