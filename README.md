@@ -17,7 +17,7 @@ Der gesamte relevante Code liegt im Order `lib/`. Andere relevante Dateien/Ordne
 - `pubspec.yaml` - Verlgeichbar mit der `package.json` / `build.gradle`; enthält Dependencies und die Projektkonfiguration.
 - `analysis_options.yaml` - Hier lassen sich für den Linter spezielle Regeln eintragen.
 
-Der `lib/` Ordner unterteilt sich in `lib/views/` und `lib/components/`. Unter `views/` befinden sich die einzelnen "Screens", wohingegen in `components/` einzelne Bausteine zur Wiederverwendung liegen.  
+Der `lib/` Ordner unterteilt sich in `lib/activities/` und `lib/views/`. Unter `activities/` befinden sich die einzelnen "Screens", wohingegen in `views/` einzelne Bausteine zur Wiederverwendung liegen.  
 *Falls nötig, kann jederzeit die Ordnerstruktur weiter gruppiert und gegliedert werden.*
 
 ## Weitere Informationen
