@@ -1,0 +1,119 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:grouply/activities/home.dart';
+import 'package:grouply/views/form_input.dart';
+import 'package:pedantic/pedantic.dart';
+
+import 'package:grouply/colors.dart' as colors;
+
+class FormSignUp extends StatefulWidget {
+  @override
+  _FormSignUpState createState() => _FormSignUpState();
+}
+
+class _FormSignUpState extends State<FormSignUp> {
+  String _email;
+  String _password;
+  String _passwordConfirmation;
+  // String _username;
+  // String _firstName;
+  // String _lastName;
+
+  final GlobalKey<FormState> _formSignUpKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formSignUpKey,
+      child: Column(
+        children: <Widget>[
+          FormInput(
+            callbackSetter: (String value) => _email = value,
+            labelText: 'E-Mail',
+            keyboardType: TextInputType.emailAddress,
+            trimInput: true,
+            validator: (input) =>
+                RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$",
+                            caseSensitive: false)
+                        .hasMatch(input)
+                    ? null
+                    : 'Dieses E-Mail-Format ist ungültig.',
+          ),
+          FormInput(
+            callbackSetter: (String value) => _password = value,
+            keyboardType: TextInputType.visiblePassword,
+            labelText: 'Passwort',
+            obscureText: true,
+            validator: (input) =>
+                input.length >= 6 ? null : 'Das Passwort ist zu kurz.',
+          ),
+          FormInput(
+            callbackSetter: (String value) => _passwordConfirmation = value,
+            keyboardType: TextInputType.visiblePassword,
+            labelText: 'Passwort bestätigen',
+            obscureText: true,
+            validator: (input) => input == _password
+                ? null
+                : 'Die Passwörter stimmen nicht überein.',
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                child: RaisedButton(
+                  color: colors.cardColor,
+                  onPressed: signUp,
+                  child: Text(
+                    'ANMELDEN',
+                    style: TextStyle(
+                      color: colors.backgroundColor,
+                    ),
+                  ),
+                ),
+                margin: EdgeInsets.only(
+                  right: 16.0,
+                ),
+              ),
+              Container(
+                child: FlatButton(
+                  child: Text(
+                    'LOGIN',
+                  ),
+                  onPressed: () {},
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void signUp() async {
+    final formSignUpState = _formSignUpKey.currentState;
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+
+    if (formSignUpState.validate()) {
+      formSignUpState.save();
+      try {
+        FirebaseUser result = (await _auth.createUserWithEmailAndPassword(
+          email: _email,
+          password: _password,
+        ))
+            .user;
+        unawaited(
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomeScreenTest(
+                user: result,
+              ),
+            ),
+          ),
+        );
+      } catch (e) {
+        print(e.message);
+      }
+    }
+  }
+}
