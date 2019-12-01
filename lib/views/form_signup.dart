@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:grouply/activities/home.dart';
-import 'package:grouply/views/form_input.dart';
 import 'package:pedantic/pedantic.dart';
+import 'package:provider/provider.dart';
 
-import 'package:grouply/colors.dart' as colors;
+import '../activities/home.dart';
+import '../colors.dart' as colors;
+import '../views/form_input.dart';
+import '../views/form_notifier.dart';
 
 class FormSignUp extends StatefulWidget {
   @override
@@ -14,7 +16,6 @@ class FormSignUp extends StatefulWidget {
 class _FormSignUpState extends State<FormSignUp> {
   String _email;
   String _password;
-  String _passwordConfirmation;
   // String _username;
   // String _firstName;
   // String _lastName;
@@ -23,6 +24,8 @@ class _FormSignUpState extends State<FormSignUp> {
 
   @override
   Widget build(BuildContext context) {
+    final FormNotifier formNotifier = Provider.of<FormNotifier>(context);
+
     return Form(
       key: _formSignUpKey,
       child: Column(
@@ -48,7 +51,7 @@ class _FormSignUpState extends State<FormSignUp> {
                 input.length >= 6 ? null : 'Das Passwort ist zu kurz.',
           ),
           FormInput(
-            callbackSetter: (String value) => _passwordConfirmation = value,
+            callbackSetter: null,
             keyboardType: TextInputType.visiblePassword,
             labelText: 'Passwort bestätigen',
             obscureText: true,
@@ -64,7 +67,7 @@ class _FormSignUpState extends State<FormSignUp> {
                   color: colors.cardColor,
                   onPressed: signUp,
                   child: Text(
-                    'ANMELDEN',
+                    'SUBMIT',
                     style: TextStyle(
                       color: colors.backgroundColor,
                     ),
@@ -79,7 +82,9 @@ class _FormSignUpState extends State<FormSignUp> {
                   child: Text(
                     'LOGIN',
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    formNotifier.toggleSignUp();
+                  },
                 ),
               ),
             ],

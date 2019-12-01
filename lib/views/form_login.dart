@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:grouply/activities/home.dart';
-import 'package:grouply/views/form_input.dart';
 import 'package:pedantic/pedantic.dart';
+import 'package:provider/provider.dart';
 
+import '../activities/home.dart';
 import '../colors.dart' as colors;
+import '../views/form_input.dart';
+import '../views/form_notifier.dart';
 
 class FormLogin extends StatefulWidget {
   @override
@@ -19,6 +21,8 @@ class _FormLoginState extends State<FormLogin> {
 
   @override
   Widget build(BuildContext context) {
+    final FormNotifier formNotifier = Provider.of<FormNotifier>(context);
+    
     return Form(
       key: _formLoginKey,
       child: Column(
@@ -49,9 +53,11 @@ class _FormLoginState extends State<FormLogin> {
               Container(
                 child: FlatButton(
                   child: Text(
-                    'CANCEL',
+                    'SIGNUP',
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    formNotifier.toggleSignUp();
+                  },
                 ),
                 margin: EdgeInsets.only(
                   right: 16.0,

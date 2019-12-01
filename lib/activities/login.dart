@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:grouply/views/form_signup.dart';
+import 'package:provider/provider.dart';
 
 import '../colors.dart' as colors;
 import '../views/form_login.dart';
+import '../views/form_notifier.dart';
+import '../views/form_signup.dart';
 
 // TODO: make login view stateful to save userID in the process
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
+  @override
+  _LoginState createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
+    final FormNotifier formNotifier = Provider.of<FormNotifier>(context);
+
     return Scaffold(
       backgroundColor: colors.primaryColor,
       body: Padding(
@@ -33,7 +42,7 @@ class Login extends StatelessWidget {
                     bottom: 40,
                   ),
                 ),
-                FormSignUp(),
+                formNotifier.isSignUp ? FormSignUp() : FormLogin()
               ],
             ),
           ),
