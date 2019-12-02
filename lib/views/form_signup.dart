@@ -16,6 +16,7 @@ class FormSignUp extends StatefulWidget {
 class _FormSignUpState extends State<FormSignUp> {
   String _email;
   String _password;
+  String _passwordConfirmation;
   // String _username;
   // String _firstName;
   // String _lastName;
@@ -51,7 +52,7 @@ class _FormSignUpState extends State<FormSignUp> {
                 input.length >= 6 ? null : 'Das Passwort ist zu kurz.',
           ),
           FormInput(
-            callbackSetter: null,
+            callbackSetter: (String value) => _passwordConfirmation = value,
             keyboardType: TextInputType.visiblePassword,
             labelText: 'Passwort bestätigen',
             obscureText: true,
