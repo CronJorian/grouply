@@ -56,7 +56,7 @@ class _FormSignUpState extends State<FormSignUp> {
             keyboardType: TextInputType.visiblePassword,
             labelText: 'Passwort bestätigen',
             obscureText: true,
-            validator: (input) => input == _password
+            validator: (input) => _passwordConfirmation == _password
                 ? null
                 : 'Die Passwörter stimmen nicht überein.',
           ),
