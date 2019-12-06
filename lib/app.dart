@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:grouply/views/form_listview.dart';
 import 'package:provider/provider.dart';
 
 import 'activities/home.dart';
 import 'activities/login.dart';
 import 'activities/todo.dart';
 import 'colors.dart';
+import 'views/form_listview.dart';
 import 'notifiers/form_notifier.dart';
 import 'notifiers/login_notifier.dart';
 
@@ -22,7 +24,7 @@ class GrouplyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         theme: retroTheme,
-        initialRoute: '/login',
+        initialRoute: '/tasklist',
         home: Home(),
         routes: {
           // create all routes here
@@ -34,6 +36,7 @@ class GrouplyApp extends StatelessWidget {
           '/todolist': (context) => TodoList(),
           // This deals as a placeholder for a possible default list
           '/home': (context) => Home(),
+          '/tasklist': (context) => ListTileCheckbox(),
         },
       ),
     );
