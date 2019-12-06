@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:grouply/views/form_listview.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
 
@@ -99,9 +100,7 @@ class _FormLoginState extends State<FormLogin> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => HomeScreenTest(
-                user: userData,
-              ),
+              builder: (context) => ListView(),
             ),
           ),
         );
