@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:grouply/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 
 class ListTileCheckbox extends StatelessWidget {
   const ListTileCheckbox({
@@ -14,19 +14,26 @@ class ListTileCheckbox extends StatelessWidget {
   final EdgeInsets padding;
   final Function onChanged;
 
-  @override
   Widget buildListItem(BuildContext context, DocumentSnapshot document) {
-    
     return Scaffold(
-          body: Container(
-        // decoration: myBoxDecoration(),
+      body: Container(
+        margin: EdgeInsets.fromLTRB(8.0, 1.0, 8.0, 1.0),
+        padding: EdgeInsets.fromLTRB(12.0, 0.0, 0.0, 0.0),
+        decoration: myBoxDecoration(),
         child: Row(
           children: <Widget>[
-            Container(
-              child: Checkbox(
-                  activeColor: primaryColor,
-                  value: document['complete'],
-                  onChanged: (bool newValue) => onChanged(newValue)),
+            InkWell(
+              onTap: () {
+                if (document['complete'] == true) {
+                  document.reference.updateData({'complete': false});
+                }
+              },
+              child: Container(
+                child: Checkbox(
+                    activeColor: primaryColor,
+                    value: document['complete'],
+                    onChanged: (bool newValue) => onChanged(newValue)),
+              ),
             ),
             Expanded(
               child: ListTile(
@@ -62,35 +69,46 @@ class ListTileCheckbox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder(
-          stream: Firestore.instance.collection('tasks').snapshots(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) return const Text('loading...');
-            return ListView.builder(
-              itemExtent: 80.0,
-              itemCount: snapshot.data.documents.length,
-              itemBuilder: (context, index) => buildListItem(
-                  context,
-                  snapshot.data.documents[
-                      index]), /*{
-                return Card(
-                  margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                  color: cardColor,
-                  child: Column(
-                    children: <Widget>[
-                      ListTileCheckbox(
-                        value: inputs[index],
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        onChanged: (bool val) {
-                          itemChange(val, index);
-                        },
-                      ),
-                    ],
-                  ),
-                );
-              });*/
-            );
-          }),
-    );
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.dehaze),
+            onPressed: () => {}, // TODO: Menü verlinken
+          ),
+          // TODO: Listenname dynamisch machen
+          title: Text("Listenname"),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.share),
+              onPressed: () => {}, // TODO: Liste teilen
+            ),
+            IconButton(
+              icon: Icon(Icons.more_vert),
+              onPressed: () => {}, // TODO: Kontextmenü
+            )
+          ],
+        ),
+        body: StreamBuilder(
+            stream: Firestore.instance.collection('tasks').snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) return const Text('loading...');
+              return ListView.builder(
+                itemExtent: 80.0,
+                itemCount: snapshot.data.documents.length,
+                itemBuilder: (context, index) =>
+                    buildListItem(context, snapshot.data.documents[index]),
+              );
+            }),
+       );
   }
+}
+
+BoxDecoration myBoxDecoration() {
+  return BoxDecoration(
+    color: cardColor,
+    border: Border.all(
+      width: 2.5,
+      color: primaryColor,
+    ),
+    borderRadius: BorderRadius.all(Radius.circular(12.0)),
+  );
 }
