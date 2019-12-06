@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'views/form_notifier.dart';
+import 'package:grouply/notifiers/login_notifier.dart';
+import 'notifiers/form_notifier.dart';
 import 'package:provider/provider.dart';
 
 import 'activities/home.dart';
@@ -14,6 +15,9 @@ class GrouplyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<FormNotifier>.value(
           value: FormNotifier(),
+        ),
+        ChangeNotifierProvider<LoginNotifier>.value(
+          value: LoginNotifier(),
         )
       ],
       child: MaterialApp(
@@ -28,7 +32,8 @@ class GrouplyApp extends StatelessWidget {
           // you don't need to fully read these, but make sure you understand how to navigate
           '/login': (context) => Login(),
           '/todolist': (context) => TodoList(),
-          '/homeTest': (context) => HomeScreenTest(),
+          // This deals as a placeholder for a possible default list
+          '/home': (context) => Home(),
         },
       ),
     );
