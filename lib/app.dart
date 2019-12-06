@@ -29,7 +29,7 @@ class GrouplyApp extends StatelessWidget {
           // you don't need to fully read these, but make sure you understand how to navigate
           '/login': (context) => Login(),
           '/todolist': (context) => TodoList(),
-          '/tasklist': (context) => Tasklist(),
+          '/tasklist': (context) => ListTileCheckbox(),
         },
       ),
     );
