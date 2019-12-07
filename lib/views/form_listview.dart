@@ -20,6 +20,8 @@ class ListTileCheckbox extends StatefulWidget {
 
 class _ListTileCheckboxState extends State<ListTileCheckbox> {
   Key _k1 = GlobalKey();
+  String _title;
+
   Widget buildListItem(BuildContext context, DocumentSnapshot document) {
     return Scaffold(
       body: Container(
@@ -94,9 +96,18 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
               icon: Icon(Icons.share),
               onPressed: () => {}, // TODO: Liste teilen
             ),
-            IconButton(
-              icon: Icon(Icons.more_vert),
-              onPressed: () => {}, // TODO: Kontextmenü
+            PopupMenuButton<String>(
+              onSelected: choiceAction,
+              itemBuilder: (BuildContext context) {
+                return Constants.choices.map((String choice) {
+                  return PopupMenuItem<String>(
+                      value: choice,
+                      child: Text(choice,
+                          style: TextStyle(
+                            color: primaryColor,
+                          )));
+                }).toList();
+              },
             )
           ],
         ),
@@ -117,14 +128,25 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
           child: Row(children: <Widget>[
             Flexible(
               child: TextFormField(
-                  key: _k1,
-                  decoration: const InputDecoration(
-                      hintText: 'Erstelle eine neue Aufgabe...',
-                      hintStyle: TextStyle(color: primaryColor))),
+                style: TextStyle(
+                  color: primaryColor,
+                ),
+                key: _k1,
+                decoration: const InputDecoration(
+                    hintText: 'Erstelle eine neue Aufgabe...',
+                    hintStyle: TextStyle(color: primaryColor)),
+                validator: (val) =>
+                    val.isEmpty ? 'Bitte trage hier den Titel ein!' : null,
+                onSaved: (val) => _title = val,
+              ),
             ),
           ]),
           margin: EdgeInsets.all(8.0),
         ));
+  }
+
+  void choiceAction(String choice) {
+    print('Verlinkung einfügen');
   }
 }
 
@@ -137,4 +159,16 @@ BoxDecoration myBoxDecoration() {
     ),
     borderRadius: BorderRadius.all(Radius.circular(12.0)),
   );
+}
+
+class Constants {
+  static const String Einstellungen = 'Einstellungen';
+  static const String Drucken = 'Liste drucken';
+  static const String Freunde = 'App empfehlen';
+
+  static const List<String> choices = <String>[
+    Einstellungen,
+    Drucken,
+    Freunde,
+  ];
 }
