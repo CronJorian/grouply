@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:grouply/notifiers/login_notifier.dart';
-import 'notifiers/form_notifier.dart';
 import 'package:provider/provider.dart';
 
 import 'activities/home.dart';
 import 'activities/login.dart';
 import 'activities/todo.dart';
 import 'colors.dart';
+import 'notifiers/form_notifier.dart';
+import 'notifiers/login_notifier.dart';
 
 class GrouplyApp extends StatelessWidget {
   @override

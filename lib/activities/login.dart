@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../colors.dart' as colors;
-import '../views/form_login.dart';
 import '../notifiers/form_notifier.dart';
+import '../views/form_login.dart';
 import '../views/form_signup.dart';
 
 // TODO: make login view stateful to save userID in the process

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:grouply/notifiers/login_notifier.dart';
 import 'package:provider/provider.dart';
+
+import '../notifiers/login_notifier.dart';
 
 class Home extends StatefulWidget {
   const Home({

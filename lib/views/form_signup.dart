@@ -1,13 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:grouply/notifiers/login_notifier.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
 
 import '../activities/home.dart';
 import '../colors.dart' as colors;
-import '../views/form_input.dart';
 import '../notifiers/form_notifier.dart';
+import '../notifiers/login_notifier.dart';
+import '../views/form_input.dart';
 
 class FormSignUp extends StatefulWidget {
   @override
