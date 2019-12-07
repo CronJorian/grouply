@@ -29,7 +29,7 @@ class _FormLoginState extends State<FormLogin> {
       child: Column(
         children: <Widget>[
           FormInput(
-              callbackSetter: (String value) =>  _email = value,
+              callbackSetter: (String value) => _email = value,
               labelText: 'E-Mail',
               keyboardType: TextInputType.emailAddress,
               trimInput: true,

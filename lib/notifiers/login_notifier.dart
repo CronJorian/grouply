@@ -6,6 +6,7 @@ class LoginNotifier extends ChangeNotifier {
   loginIn(FirebaseUser user) {
     this.user = user;
   }
+
   logOut() {
     this.user = null;
   }
