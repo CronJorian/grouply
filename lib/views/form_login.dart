@@ -51,7 +51,7 @@ class _FormLoginState extends State<FormLogin> {
               Container(
                 child: FlatButton(
                   child: Text(
-                    'SIGNUP',
+                    'REGISTRIEREN',
                   ),
                   onPressed: () {
                     formNotifier.toggleSignUp();

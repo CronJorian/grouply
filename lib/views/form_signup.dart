@@ -69,7 +69,7 @@ class _FormSignUpState extends State<FormSignUp> {
                   color: colors.cardColor,
                   onPressed: signUp,
                   child: Text(
-                    'SUBMIT',
+                    'BESTÄTIGEN',
                     style: TextStyle(
                       color: colors.backgroundColor,
                     ),
