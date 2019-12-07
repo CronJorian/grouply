@@ -31,10 +31,13 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
         child: Row(
           children: <Widget>[
             Container(
-              child: Checkbox(
-                  activeColor: primaryColor,
-                  value: document['complete'],
-                  onChanged: (bool newValue) => widget.onChanged(newValue)),
+              child: Theme(
+                data: ThemeData(unselectedWidgetColor: primaryColor),
+                child: Checkbox(
+                    activeColor: primaryColor,
+                    value: document['complete'],
+                    onChanged: (bool newValue) => widget.onChanged(newValue)),
+              ),
             ),
             Expanded(
               child: ListTile(
