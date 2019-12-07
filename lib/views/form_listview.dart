@@ -158,11 +158,13 @@ class Constants {
   static const String Einstellungen = 'Einstellungen';
   static const String Drucken = 'Liste drucken';
   static const String Freunde = 'App empfehlen';
+  static const String Loeschen = 'Liste löschen';
 
   static const List<String> choices = <String>[
     Einstellungen,
     Drucken,
     Freunde,
+    Loeschen,
   ];
 }
 
