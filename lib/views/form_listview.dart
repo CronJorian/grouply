@@ -32,7 +32,7 @@ class ListTileCheckbox extends StatelessWidget {
                 child: Checkbox(
                     activeColor: primaryColor,
                     value: document['complete'],
-                    onChanged: (bool newValue) => onChanged(newValue)),
+                  ),
               ),
             ),
             Expanded(
@@ -56,7 +56,11 @@ class ListTileCheckbox extends StatelessWidget {
                           document['description'],
                           style: TextStyle(color: primaryColor),
                         ),
-                  trailing: Icon(Icons.insert_emoticon),
+                  trailing: IconButton(
+                    icon: Icon(Icons.insert_emoticon),
+                    color: primaryColor, 
+                    iconSize: 35.0,
+                    onPressed: () => {},), // TODO: Personenauswahl
                   onTap: () {} //Aufruf der Detailansicht.
                   ),
             ),
@@ -72,7 +76,7 @@ class ListTileCheckbox extends StatelessWidget {
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.dehaze),
-            onPressed: () => {}, // TODO: Menü verlinken
+            onPressed: () => {}, 
           ),
           // TODO: Listenname dynamisch machen
           title: Text("Listenname"),
