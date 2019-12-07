@@ -3,7 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:grouply/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ListTileCheckbox extends StatelessWidget {
+class ListTileCheckbox extends StatefulWidget {
   const ListTileCheckbox({
     this.label,
     this.padding,
@@ -12,8 +12,14 @@ class ListTileCheckbox extends StatelessWidget {
 
   final String label;
   final EdgeInsets padding;
-  final Function onChanged;
+  final ValueChanged<bool> onChanged;
 
+  @override
+  _ListTileCheckboxState createState() => _ListTileCheckboxState();
+}
+
+class _ListTileCheckboxState extends State<ListTileCheckbox> {
+  Key _k1 = GlobalKey();
   Widget buildListItem(BuildContext context, DocumentSnapshot document) {
     return Scaffold(
       body: Container(
@@ -22,19 +28,21 @@ class ListTileCheckbox extends StatelessWidget {
         decoration: myBoxDecoration(),
         child: Row(
           children: <Widget>[
-            InkWell(
+            /*InkWell(
+              hoverColor: primaryColor,
               onTap: () {
                 if (document['complete'] == true) {
                   document.reference.updateData({'complete': false});
                 }
               },
-              child: Container(
-                child: Checkbox(
-                    activeColor: primaryColor,
-                    value: document['complete'],
-                  ),
-              ),
+              child:*/
+            Container(
+              child: Checkbox(
+                  activeColor: primaryColor,
+                  value: document['complete'],
+                  onChanged: (bool newValue) => widget.onChanged(newValue)),
             ),
+            //),
             Expanded(
               child: ListTile(
                   title: document['complete']
@@ -58,9 +66,10 @@ class ListTileCheckbox extends StatelessWidget {
                         ),
                   trailing: IconButton(
                     icon: Icon(Icons.insert_emoticon),
-                    color: primaryColor, 
+                    color: primaryColor,
                     iconSize: 35.0,
-                    onPressed: () => {},), // TODO: Personenauswahl
+                    onPressed: () => {},
+                  ), // TODO: Personenauswahl
                   onTap: () {} //Aufruf der Detailansicht.
                   ),
             ),
@@ -76,7 +85,7 @@ class ListTileCheckbox extends StatelessWidget {
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.dehaze),
-            onPressed: () => {}, 
+            onPressed: () => {},
           ),
           // TODO: Listenname dynamisch machen
           title: Text("Listenname"),
@@ -102,7 +111,20 @@ class ListTileCheckbox extends StatelessWidget {
                     buildListItem(context, snapshot.data.documents[index]),
               );
             }),
-       );
+        bottomSheet: Container(
+          decoration: myBoxDecoration(),
+          padding: EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
+          child: Row(children: <Widget>[
+            Flexible(
+              child: TextFormField(
+                  key: _k1,
+                  decoration: const InputDecoration(
+                      hintText: 'Erstelle eine neue Aufgabe...',
+                      hintStyle: TextStyle(color: primaryColor))),
+            ),
+          ]),
+          margin: EdgeInsets.all(8.0),
+        ));
   }
 }
 
