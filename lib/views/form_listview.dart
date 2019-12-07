@@ -19,8 +19,8 @@ class ListTileCheckbox extends StatefulWidget {
 }
 
 class _ListTileCheckboxState extends State<ListTileCheckbox> {
-  Key _k1 = GlobalKey();
-  String _title;
+  final GlobalKey<FormState> _formTextboxKey = GlobalKey<FormState>();
+  final db = Firestore.instance;
 
   Widget buildListItem(BuildContext context, DocumentSnapshot document) {
     return Scaffold(
@@ -30,21 +30,12 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
         decoration: myBoxDecoration(),
         child: Row(
           children: <Widget>[
-            /*InkWell(
-              hoverColor: primaryColor,
-              onTap: () {
-                if (document['complete'] == true) {
-                  document.reference.updateData({'complete': false});
-                }
-              },
-              child:*/
             Container(
               child: Checkbox(
                   activeColor: primaryColor,
                   value: document['complete'],
                   onChanged: (bool newValue) => widget.onChanged(newValue)),
             ),
-            //),
             Expanded(
               child: ListTile(
                   title: document['complete']
@@ -70,9 +61,9 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
                     icon: Icon(Icons.insert_emoticon),
                     color: primaryColor,
                     iconSize: 35.0,
-                    onPressed: () => {},
-                  ), // TODO: Personenauswahl
-                  onTap: () {} //Aufruf der Detailansicht.
+                    onPressed: () => {}, // TODO: Personenauswahl
+                  ),
+                  onTap: () {} // TODO: Aufruf der Detailansicht.
                   ),
             ),
           ],
@@ -127,38 +118,37 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
           padding: EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
           child: Row(children: <Widget>[
             Flexible(
-              child: TextFormField(
-                style: TextStyle(
-                  color: primaryColor,
-                ),
-                key: _k1,
-                decoration: const InputDecoration(
-                    hintText: 'Erstelle eine neue Aufgabe...',
-                    hintStyle: TextStyle(color: primaryColor)),
-                validator: (val) =>
-                    val.isEmpty ? 'Bitte trage hier den Titel ein!' : null,
-                onSaved: (val) => _title = val,
+                child: TextFormField(
+              style: TextStyle(
+                color: primaryColor,
               ),
-            ),
+              key: _formTextboxKey,
+              decoration: const InputDecoration(
+                  hintText: 'Erstelle eine neue Aufgabe...',
+                  hintStyle: TextStyle(color: primaryColor)),
+              validator: (val) =>
+                  val.isEmpty ? 'Bitte trage hier den Titel ein!' : null,
+              //onSaved:
+            )),
           ]),
           margin: EdgeInsets.all(8.0),
         ));
   }
 
   void choiceAction(String choice) {
-    print('Verlinkung einfügen');
+    print('Verlinkung einfügen'); // TODO: Verlinkung zu Menüpunkten
   }
-}
 
-BoxDecoration myBoxDecoration() {
-  return BoxDecoration(
-    color: cardColor,
-    border: Border.all(
-      width: 2.5,
-      color: primaryColor,
-    ),
-    borderRadius: BorderRadius.all(Radius.circular(12.0)),
-  );
+  BoxDecoration myBoxDecoration() {
+    return BoxDecoration(
+      color: cardColor,
+      border: Border.all(
+        width: 2.5,
+        color: primaryColor,
+      ),
+      borderRadius: BorderRadius.all(Radius.circular(12.0)),
+    );
+  }
 }
 
 class Constants {
@@ -172,3 +162,12 @@ class Constants {
     Freunde,
   ];
 }
+
+/*
+          Firestore.instance.runTransaction((transaction) async {
+                await transaction.set(Firestore.instance.collection("tasks").document(), {
+                  'reply' : {
+                  'title': _title,
+                  'description': '',
+                  'complete': false,
+    }*/
