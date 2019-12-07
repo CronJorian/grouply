@@ -1,9 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
 
-import '../activities/home.dart';
 import '../colors.dart' as colors;
 import '../notifiers/form_notifier.dart';
 import '../notifiers/login_notifier.dart';
@@ -95,17 +93,9 @@ class _FormLoginState extends State<FormLogin> {
           password: _password,
         ))
             .user;
-        // * WARNING: `unawaited` might cause a problem
-        unawaited(loginNotifier.loginIn(userData));
-        unawaited(
-          // TODO: Either change this so a named route or change the app.dart file. It would probably be better to change this route and outsource it to the app.dart, where all routes are written.
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Home(),
-            ),
-          ),
-        );
+        loginNotifier.loginIn(userData);
+        await Navigator.of(context)
+            .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
       } catch (e) {
         print(e.message);
       }

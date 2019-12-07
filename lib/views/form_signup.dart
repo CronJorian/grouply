@@ -1,9 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
 
-import '../activities/home.dart';
 import '../colors.dart' as colors;
 import '../notifiers/form_notifier.dart';
 import '../notifiers/login_notifier.dart';
@@ -109,14 +107,10 @@ class _FormSignUpState extends State<FormSignUp> {
           password: _password,
         ))
             .user;
-        unawaited(loginNotifier.loginIn(result));
-        unawaited(
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Home(),
-            ),
-          ),
+        loginNotifier.loginIn(result);
+        await Navigator.of(context).pushNamedAndRemoveUntil(
+          '/',
+          (Route<dynamic> route) => false,
         );
       } catch (e) {
         print(e.message);
