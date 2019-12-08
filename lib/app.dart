@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grouply/views/form_listview.dart';
+import 'package:grouply/views/form_taskview.dart';
 import 'views/form_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -30,6 +31,7 @@ class GrouplyApp extends StatelessWidget {
           '/login': (context) => Login(),
           '/todolist': (context) => TodoList(),
           '/tasklist': (context) => ListTileCheckbox(),
+          '/taskview': (context) => TaskView(),
         },
       ),
     );
