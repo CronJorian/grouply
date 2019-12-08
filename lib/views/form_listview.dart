@@ -4,6 +4,10 @@ import 'package:grouply/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ListTileCheckbox extends StatefulWidget {
+  // const ListTileCheckbox({
+  //   Key key,
+  // }) : super(key: key);
+
   const ListTileCheckbox({
     this.label,
     this.padding,
@@ -20,7 +24,7 @@ class ListTileCheckbox extends StatefulWidget {
 
 class _ListTileCheckboxState extends State<ListTileCheckbox> {
   final GlobalKey<FormState> _formTextboxKey = GlobalKey<FormState>();
-  final db = Firestore.instance;
+  final TextEditingController _titleController = TextEditingController();
 
   Widget buildListItem(BuildContext context, DocumentSnapshot document) {
     return Scaffold(
@@ -30,13 +34,17 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
         decoration: myBoxDecoration(),
         child: Row(
           children: <Widget>[
-            Container(
-              child: Theme(
-                data: ThemeData(unselectedWidgetColor: primaryColor),
-                child: Checkbox(
-                    activeColor: primaryColor,
-                    value: document['complete'],
-                    onChanged: (bool newValue) => widget.onChanged(newValue)),
+            GestureDetector(
+              onTap:
+                  () {}, // TODO: Bool 'complete' verändern - CHeckboxfunktionalität
+              child: Container(
+                child: Theme(
+                  data: ThemeData(unselectedWidgetColor: primaryColor),
+                  child: Checkbox(
+                      activeColor: primaryColor,
+                      value: document['complete'],
+                      onChanged: (bool newValue) => widget.onChanged(newValue)),
+                ),
               ),
             ),
             Expanded(
@@ -119,21 +127,29 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
         bottomSheet: Container(
           decoration: myBoxDecoration(),
           padding: EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
-          child: Row(children: <Widget>[
-            Flexible(
+          child: Row(
+            children: [
+              Container(
+                width: 330.0,
                 child: TextFormField(
-              style: TextStyle(
-                color: primaryColor,
-              ),
-              key: _formTextboxKey,
-              decoration: const InputDecoration(
-                  hintText: 'Erstelle eine neue Aufgabe...',
-                  hintStyle: TextStyle(color: primaryColor)),
-              validator: (val) =>
-                  val.isEmpty ? 'Bitte trage hier den Titel ein!' : null,
-              //onSaved:
-            )),
-          ]),
+                  controller: _titleController,
+                  style: TextStyle(
+                  color: primaryColor,
+                  ),
+                  key: _formTextboxKey,
+                  decoration: const InputDecoration(
+                    hintText: 'Erstelle eine neue Aufgabe...',
+                    hintStyle: TextStyle(color: primaryColor)),
+              )),
+              Container(
+                  child: IconButton(
+                    color: primaryColor,
+                    icon: Icon(Icons.save),
+                    onPressed: saveTitle,
+                  ),
+              )
+            ],
+          ),
           margin: EdgeInsets.all(8.0),
         ));
   }
@@ -152,6 +168,17 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
       borderRadius: BorderRadius.all(Radius.circular(12.0)),
     );
   }
+
+  void saveTitle() async {
+    final formTextState = _formTextboxKey.currentState;
+    final Firestore db = Firestore.instance;
+
+    try {
+      formTextState.save();
+    } catch (e) {
+      print(e.message);
+    }
+  }
 }
 
 class Constants {
@@ -167,6 +194,22 @@ class Constants {
     Loeschen,
   ];
 }
+
+/*class Record {
+ final String title;
+ final String description;
+ final bool complete;
+ final DocumentReference reference;
+
+ Record.fromMap(Map<String, dynamic> map, {this.reference})
+     : assert(map['title'] != null),
+       title = map['title'],
+       description = "",
+       complete = false;
+
+ Record.fromSnapshot(DocumentSnapshot snapshot)
+     : this.fromMap(snapshot.data, reference: snapshot.reference);
+}*/
 
 /*
           Firestore.instance.runTransaction((transaction) async {
