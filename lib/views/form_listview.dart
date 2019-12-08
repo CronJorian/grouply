@@ -124,29 +124,29 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
                     buildListItem(context, snapshot.data.documents[index]),
               );
             }),
-        bottomSheet: Container(
+        bottomNavigationBar: Container(
           decoration: myBoxDecoration(),
           padding: EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
           child: Row(
             children: [
               Container(
-                width: 330.0,
-                child: TextFormField(
-                  controller: _titleController,
-                  style: TextStyle(
-                  color: primaryColor,
-                  ),
-                  key: _formTextboxKey,
-                  decoration: const InputDecoration(
-                    hintText: 'Erstelle eine neue Aufgabe...',
-                    hintStyle: TextStyle(color: primaryColor)),
-              )),
+                  width: 330.0,
+                  child: TextFormField(
+                    key: _formTextboxKey,
+                    controller: _titleController,
+                    style: TextStyle(
+                      color: primaryColor,
+                    ),
+                    decoration: const InputDecoration(
+                        hintText: 'Erstelle eine neue Aufgabe...',
+                        hintStyle: TextStyle(color: primaryColor)),
+                  )),
               Container(
-                  child: IconButton(
-                    color: primaryColor,
-                    icon: Icon(Icons.save),
-                    onPressed: saveTitle,
-                  ),
+                child: IconButton(
+                  color: primaryColor,
+                  icon: Icon(Icons.save),
+                  onPressed: saveTitle,
+                ),
               )
             ],
           ),
@@ -172,9 +172,13 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
   void saveTitle() async {
     final formTextState = _formTextboxKey.currentState;
     final Firestore db = Firestore.instance;
-
+    formTextState.save();
     try {
-      formTextState.save();
+      await db.collection("tasks").add({
+        'title': '_titleController.text',
+        'description': '',
+        'complete': false,
+      });
     } catch (e) {
       print(e.message);
     }
@@ -194,28 +198,3 @@ class Constants {
     Loeschen,
   ];
 }
-
-/*class Record {
- final String title;
- final String description;
- final bool complete;
- final DocumentReference reference;
-
- Record.fromMap(Map<String, dynamic> map, {this.reference})
-     : assert(map['title'] != null),
-       title = map['title'],
-       description = "",
-       complete = false;
-
- Record.fromSnapshot(DocumentSnapshot snapshot)
-     : this.fromMap(snapshot.data, reference: snapshot.reference);
-}*/
-
-/*
-          Firestore.instance.runTransaction((transaction) async {
-                await transaction.set(Firestore.instance.collection("tasks").document(), {
-                  'reply' : {
-                  'title': _title,
-                  'description': '',
-                  'complete': false,
-    }*/
