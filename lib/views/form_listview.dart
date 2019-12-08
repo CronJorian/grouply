@@ -124,22 +124,24 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
                     buildListItem(context, snapshot.data.documents[index]),
               );
             }),
-        bottomNavigationBar: Container(
+        bottomSheet: Container(
           decoration: myBoxDecoration(),
           padding: EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
           child: Row(
             children: [
               Container(
                   width: 330.0,
-                  child: TextFormField(
+                  child: Form(
                     key: _formTextboxKey,
-                    controller: _titleController,
-                    style: TextStyle(
-                      color: primaryColor,
+                    child: TextFormField(
+                      controller: _titleController,
+                      style: TextStyle(
+                        color: primaryColor,
+                      ),
+                      decoration: const InputDecoration(
+                          hintText: 'Erstelle eine neue Aufgabe...',
+                          hintStyle: TextStyle(color: primaryColor)),
                     ),
-                    decoration: const InputDecoration(
-                        hintText: 'Erstelle eine neue Aufgabe...',
-                        hintStyle: TextStyle(color: primaryColor)),
                   )),
               Container(
                 child: IconButton(
@@ -175,13 +177,17 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
     formTextState.save();
     try {
       await db.collection("tasks").add({
-        'title': '_titleController.text',
+        'title': _titleController.text,
         'description': '',
         'complete': false,
       });
     } catch (e) {
       print(e.message);
     }
+  }
+
+  void changeStatus() async {
+    final Firestore db = Firestore.instance;
   }
 }
 
