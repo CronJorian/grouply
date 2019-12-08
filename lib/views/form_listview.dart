@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:grouply/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:grouply/views/form_taskview.dart';
 
 class ListTileCheckbox extends StatefulWidget {
   // const ListTileCheckbox({
@@ -74,7 +75,14 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
                     iconSize: 35.0,
                     onPressed: () => {}, // TODO: Personenauswahl
                   ),
-                  onTap: () {} // TODO: Aufruf der Detailansicht.
+                  onTap: () {
+                    // Aufruf der Detailansicht
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => TaskView())
+                    );
+
+                  } 
                   ),
             ),
           ],
