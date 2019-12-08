@@ -19,5 +19,43 @@ final ThemeData retroTheme = ThemeData.dark().copyWith(
   scaffoldBackgroundColor: backgroundColor,
   cardColor: cardColor,
   primaryColor: primaryColor,
-  errorColor: warningColor, 
+  errorColor: warningColor,
 );
+
+final TextStyle inputTextStyle = TextStyle(
+  color: cardColor,
+  fontSize: 16,
+);
+
+InputDecoration inputDecoration({String labelText = ""}) {
+  return InputDecoration(
+    labelText: labelText,
+    labelStyle: TextStyle(
+      color: cardColor,
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(
+        color: cardColor,
+        width: 1,
+      ),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(
+        color: cardColor,
+        width: 2,
+      ),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderSide: BorderSide(
+        color: warningColor,
+        width: 1,
+      ),
+    ),
+    focusedErrorBorder: OutlineInputBorder(
+      borderSide: BorderSide(
+        color: warningColor,
+        width: 2,
+      ),
+    ),
+  );
+}
