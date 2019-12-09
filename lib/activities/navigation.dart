@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:grouply/views/form_listview.dart';
+import 'package:grouply/views/form_login.dart';
 
 import '../colors.dart' as colors;
 import '../views/form_navigation.dart';
 import '../task.dart';
-
 
 class TaskList extends StatefulWidget{
   @override
@@ -18,6 +18,8 @@ class _TaskListState extends State<TaskList> {
     Task(author:'Max', text:'Milch einkaufen'),
   ];
 
+  String _user;
+  String _list;
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +67,7 @@ class _TaskListState extends State<TaskList> {
                 trailing: Icon(Icons.power_settings_new),
                 onTap: () {
                   Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => FormLogin()));
                 },
               ),
             ]
