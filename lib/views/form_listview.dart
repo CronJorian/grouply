@@ -113,18 +113,25 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
             )
           ],
         ),
-        body: StreamBuilder(
-            stream: Firestore.instance.collection('tasks').snapshots(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) return const Text('loading...');
-              return ListView.builder(
-                itemExtent: 80.0,
-                itemCount: snapshot.data.documents.length,
-                itemBuilder: (context, index) =>
-                    buildListItem(context, snapshot.data.documents[index]),
-              );
-            }),
-        bottomNavigationBar: Container(
+        body: Column(
+          children: <Widget>[
+            LimitedBox(
+              maxHeight: 540.0,
+              child: StreamBuilder(
+                  stream: Firestore.instance.collection('tasks').snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) return const Text('loading...');
+                    return ListView.builder(
+                      itemExtent: 80.0,
+                      itemCount: snapshot.data.documents.length,
+                      itemBuilder: (context, index) => buildListItem(
+                          context, snapshot.data.documents[index]),
+                    );
+                  }),
+            ),
+          ],
+        ),
+        bottomSheet: Container(
           decoration: myBoxDecoration(),
           padding: EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
           child: Row(
