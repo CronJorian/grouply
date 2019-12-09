@@ -1,17 +1,24 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:flutter/semantics.dart';
 import '../colors.dart' as colors;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
+import 'dart:async';
 
 class TaskView extends StatefulWidget {
   @override 
   _taskViewState createState() => _taskViewState();
 }
 
+// final mainReference = FirebaseDatabase.instance.reference();
+
 class _taskViewState extends State<TaskView> {
+
   final textController = TextEditingController(
     text: "Test",
   );
+  final GlobalKey<FormState> _formTaskKey = GlobalKey<FormState>();
 
   @override 
   Widget build(BuildContext context) {
@@ -39,6 +46,7 @@ class _taskViewState extends State<TaskView> {
           alignment: Alignment.topLeft,
           child: Column(
             children: <Widget>[
+              
 
 
               Container(
@@ -49,6 +57,7 @@ class _taskViewState extends State<TaskView> {
                   ),
                   padding: EdgeInsets.all(5.0),
                   margin: EdgeInsets.all(3.0),
+                  key: _formTaskKey,
                   child: Row(
                     children: <Widget>[
                       Expanded(child: Text('Beschreibung:', style: TextStyle(color: Colors.black)), flex: 0),
@@ -77,6 +86,7 @@ class _taskViewState extends State<TaskView> {
                   ),
                   padding: EdgeInsets.all(5.0),
                   margin: EdgeInsets.all(3.0),
+                  //key: _formTaskKey,
                   child: Row(
                     children: <Widget>[
                       Expanded(child: Text('Person:', style: TextStyle(color: Colors.black)), flex: 0),
@@ -105,6 +115,7 @@ class _taskViewState extends State<TaskView> {
                   ),
                   padding: EdgeInsets.all(5.0),
                   margin: EdgeInsets.all(3.0),
+                  //key: _formTaskKey,
                   child: Row(
                     children: <Widget>[
                       Expanded(child: Text('Startdatum:', style: TextStyle(color: Colors.black)), flex: 0),
@@ -133,6 +144,7 @@ class _taskViewState extends State<TaskView> {
                   ),
                   padding: EdgeInsets.all(5.0),
                   margin: EdgeInsets.all(3.0),
+                  //key: _formTaskKey,
                   child: Row(
                     children: <Widget>[
                       Expanded(child: Text('Enddatum:', style: TextStyle(color: Colors.black)), flex: 0),
@@ -161,6 +173,7 @@ class _taskViewState extends State<TaskView> {
                   ),
                   padding: EdgeInsets.all(5.0),
                   margin: EdgeInsets.all(3.0),
+                  //key: _formTaskKey,
                   child: Row(
                     children: <Widget>[
                       Expanded(child: Text('Kosten:', style: TextStyle(color: Colors.black)), flex: 0),
@@ -186,5 +199,39 @@ class _taskViewState extends State<TaskView> {
         )
       )
     );
+  }
+
+  void saveTask() async {
+    final formTextState = _formTaskKey.currentState;
+    final Firestore db = Firestore.instance;
+    formTextState.save();
+    if (formTextState.validate()) {
+      try {
+        await db.collection("tasks").add(
+          {
+            'title': '',
+            'description': '',
+            'person': '',
+            'start-date': '',
+            'end-date': '',
+            'costs': '',
+            'complete': false,
+            // ID?
+          },
+        );
+      } catch (e) {
+        print(e.message);
+      }
+    }
+    initState();
+  }
+
+  void initState() {
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    super.initState();
+   }
+
+  void changeStatus() async {
+    final Firestore db = Firestore.instance;
   }
 }
