@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grouply/views/form_listview.dart';
 
 import '../colors.dart' as colors;
 import '../views/form_navigation';
@@ -38,6 +39,10 @@ class _TaskListState extends State<TaskList> {
               ),
               ListTile(
                 title: Text("Example List"),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ListTileCheckbox()));
+                },
               ),
             ]
         ),
