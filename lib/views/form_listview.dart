@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:grouply/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -157,13 +158,6 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
                           hintStyle: TextStyle(color: primaryColor)),
                     ),
                   )),
-              /*Container(
-                child: IconButton(
-                  color: primaryColor,
-                  icon: Icon(Icons.save),
-                  //onPressed: saveTitle,
-                ),
-              )*/
             ],
           ),
           margin: EdgeInsets.all(8.0),
@@ -204,7 +198,13 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
       }
       _titleController.clear();
     }
+    initState();
   }
+
+  void initState() {
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    super.initState();
+   }
 
   void changeStatus() async {
     final Firestore db = Firestore.instance;
