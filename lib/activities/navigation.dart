@@ -21,6 +21,7 @@ class _TaskListState extends State<TaskList> {
 
   @override
   Widget build(BuildContext context) {
+    //final LoginNotifier loginNotifier = Provider.of<LoginNotifier>(context);
     return Scaffold(
       appBar: AppBar(
           title: Text("Grouply"),
@@ -33,8 +34,8 @@ class _TaskListState extends State<TaskList> {
                 accountName: Text("Wähle eine Liste aus..."),
                 accountEmail: Text("Oder erstelle eine neue Liste"),
                 currentAccountPicture: CircleAvatar(
-                  backgroundColor: Colors.deepPurpleAccent,
-                  child: Text("Alpha"),
+                  backgroundColor: Colors.white,
+                  child: Text("Max"),
                 ),
               ),
               ListTile(
@@ -59,11 +60,19 @@ class _TaskListState extends State<TaskList> {
                   Navigator.pop(context);
                 },
               ),
+              ListTile(
+                title: Text("log out"),
+                trailing: Icon(Icons.power_settings_new),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
             ]
         ),
       ),
       body: Column(
         children: tasks.map((task) => TaskCard(task: task)).toList(),
+        //children: _buildBody(context, loginNotifier.user.uid),
       ),
     );
   }
