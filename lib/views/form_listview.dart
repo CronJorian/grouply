@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
-import 'package:grouply/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import '../colors.dart';
 
 class ListTileCheckbox extends StatefulWidget {
   // const ListTileCheckbox({
@@ -84,10 +84,6 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.dehaze),
-          onPressed: () => {},
-        ),
         // TODO: Listenname dynamisch machen
         title: Text("Listenname"),
         actions: <Widget>[
@@ -116,7 +112,12 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
             child: StreamBuilder<QuerySnapshot>(
               stream: Firestore.instance.collection('tasks').snapshots(),
               builder: (context, snapshot) {
-                if (!snapshot.hasData) return LinearProgressIndicator();
+                if (!snapshot.hasData) {
+                  return Align(
+                    alignment: Alignment.topCenter,
+                    child: LinearProgressIndicator(),
+                  );
+                }
                 return Scrollbar(
                   child: ListView.builder(
                     itemExtent: 84.0,
