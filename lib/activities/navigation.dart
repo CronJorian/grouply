@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:grouply/views/form_listview.dart';
 
 import '../colors.dart' as colors;
-import '../views/form_navigation';
+import '../views/form_navigation.dart';
 import '../task.dart';
 
 
@@ -42,6 +42,21 @@ class _TaskListState extends State<TaskList> {
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ListTileCheckbox()));
+                },
+              ),
+              ListTile(
+                title: Text("Sommerreise"),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ListTileCheckbox()));
+                },
+              ),
+              Divider(),
+              ListTile(
+                title: Text("close"),
+                trailing: Icon(Icons.close),
+                onTap: () {
+                  Navigator.pop(context);
                 },
               ),
             ]
