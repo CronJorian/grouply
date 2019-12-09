@@ -124,17 +124,24 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
                     buildListItem(context, snapshot.data.documents[index]),
               );
             }),
-        bottomSheet: Container(
+        bottomNavigationBar: Container(
           decoration: myBoxDecoration(),
           padding: EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
           child: Row(
             children: [
               Container(
-                  width: 330.0,
+                  width: 375.0,
                   child: Form(
                     key: _formTextboxKey,
                     child: TextFormField(
                       controller: _titleController,
+                      onEditingComplete: saveTitle,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                        return null;
+                      },
                       style: TextStyle(
                         color: primaryColor,
                       ),
@@ -143,13 +150,13 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
                           hintStyle: TextStyle(color: primaryColor)),
                     ),
                   )),
-              Container(
+              /*Container(
                 child: IconButton(
                   color: primaryColor,
                   icon: Icon(Icons.save),
-                  onPressed: saveTitle,
+                  //onPressed: saveTitle,
                 ),
-              )
+              )*/
             ],
           ),
           margin: EdgeInsets.all(8.0),
@@ -175,14 +182,20 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
     final formTextState = _formTextboxKey.currentState;
     final Firestore db = Firestore.instance;
     formTextState.save();
-    try {
-      await db.collection("tasks").add({
-        'title': _titleController.text,
-        'description': '',
-        'complete': false,
-      });
-    } catch (e) {
-      print(e.message);
+    if (formTextState.validate()) {
+      try {
+        await db.collection("tasks").add(
+          {
+            'title': _titleController.text,
+            'description': '',
+            'complete': false,
+            //'listid': _listcontroller  // TODO: ListenID muss hier immer mitgegeben werden!
+          },
+        );
+      } catch (e) {
+        print(e.message);
+      }
+      _titleController.clear();
     }
   }
 
