@@ -76,7 +76,7 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
                 //Aufruf der Detailansicht
                 Navigator.push(
                   context, 
-                  MaterialPageRoute(builder: (document) => TaskView())
+                  MaterialPageRoute(builder: (context) => TaskView(document: document))
                   );
 
                   } // TODO: Aufruf der Detailansicht.
