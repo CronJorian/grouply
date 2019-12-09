@@ -24,7 +24,7 @@ class HomeState extends State<Home> {
         // If no user is logged is provided there will be no information.
         title: Text(loginNotifier.user?.email ?? "Kein User ist angemeldet."),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton( //TODO: Remove when not needed anymore
         child: Icon(Icons.line_style),
         onPressed: () => Navigator.pushNamed(context, '/tasklist'),
       ),

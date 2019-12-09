@@ -4,12 +4,8 @@ import 'package:flutter/services.dart';
 
 import '../colors.dart';
 
-class ListTileCheckbox extends StatefulWidget {
-  // const ListTileCheckbox({
-  //   Key key,
-  // }) : super(key: key);
-
-  const ListTileCheckbox({
+class Checklist extends StatefulWidget {
+  const Checklist({
     this.label,
     this.padding,
     this.onChanged,
@@ -20,10 +16,10 @@ class ListTileCheckbox extends StatefulWidget {
   final ValueChanged<bool> onChanged;
 
   @override
-  _ListTileCheckboxState createState() => _ListTileCheckboxState();
+  _ChecklistState createState() => _ChecklistState();
 }
 
-class _ListTileCheckboxState extends State<ListTileCheckbox> {
+class _ChecklistState extends State<Checklist> {
   final GlobalKey<FormState> _formTextboxKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
 
@@ -39,9 +35,10 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
               child: Theme(
                 data: ThemeData(unselectedWidgetColor: primaryColor),
                 child: Checkbox(
-                    activeColor: primaryColor,
-                    value: document['complete'],
-                    onChanged: (bool newValue) => changeStatus(document)),
+                  activeColor: primaryColor,
+                  value: document['complete'],
+                  onChanged: (v) => changeStatus(document),
+                ),
               ),
             ),
             Expanded(
@@ -56,17 +53,12 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
                           document['title'],
                           style: TextStyle(color: primaryColor),
                         ),
-                  subtitle: document['complete']
-                      ? Text(
-                          document['description'],
-                          style: TextStyle(color: primaryColor),
-                        )
-                      : Text(
-                          document['description'],
-                          style: TextStyle(color: primaryColor),
-                        ),
+                  subtitle: Text(
+                    document['description'],
+                  ),
                   trailing: IconButton(
-                    icon: Icon(Icons.insert_emoticon),
+                    icon: Icon(
+                        Icons.insert_emoticon), // TODO: Add variable UserIcon
                     color: primaryColor,
                     iconSize: 35.0,
                     onPressed: () => {}, // TODO: Personenauswahl
@@ -84,8 +76,7 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // TODO: Listenname dynamisch machen
-        title: Text("Listenname"),
+        title: Text("Listenname"), // TODO: Listenname dynamisch machen
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.share),
@@ -94,16 +85,21 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
           PopupMenuButton<String>(
             onSelected: choiceAction,
             itemBuilder: (BuildContext context) {
-              return Constants.choices.map((String choice) {
-                return PopupMenuItem<String>(
+              return Constants.choices.map(
+                (String choice) {
+                  return PopupMenuItem<String>(
                     value: choice,
-                    child: Text(choice,
-                        style: TextStyle(
-                          color: primaryColor,
-                        )));
-              }).toList();
+                    child: Text(
+                      choice,
+                      style: TextStyle(
+                        color: primaryColor,
+                      ),
+                    ),
+                  );
+                },
+              ).toList();
             },
-          )
+          ),
         ],
       ),
       body: Column(
@@ -124,7 +120,9 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
                     itemCount: snapshot.data.documents.length,
                     itemBuilder: (context, index) {
                       return buildListItem(
-                          context, snapshot.data.documents[index]);
+                        context,
+                        snapshot.data.documents[index],
+                      );
                     },
                   ),
                 );
@@ -150,9 +148,10 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
                     color: primaryColor,
                   ),
                   decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Erstelle eine neue Aufgabe...',
-                      hintStyle: TextStyle(color: primaryColor)),
+                    border: InputBorder.none,
+                    hintText: 'Erstelle eine neue Aufgabe...',
+                    hintStyle: TextStyle(color: primaryColor),
+                  ),
                 ),
               ),
             ),
@@ -174,7 +173,9 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
         width: 2.5,
         color: primaryColor,
       ),
-      borderRadius: BorderRadius.all(Radius.circular(12.0)),
+      borderRadius: BorderRadius.all(
+        Radius.circular(12.0),
+      ),
     );
   }
 
@@ -207,10 +208,11 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
 
   void changeStatus(DocumentSnapshot document) {
     final Firestore db = Firestore.instance;
-    db
-        .collection('tasks')
-        .document(document.documentID)
-        .updateData({'complete': !document['complete']});
+    db.collection('tasks').document(document.documentID).updateData(
+      {
+        'complete': !document['complete'],
+      },
+    );
   }
 }
 
