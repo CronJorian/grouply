@@ -67,7 +67,6 @@ class _taskViewState extends State<TaskView> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 16.0),
                         child: Container(
-                          child: StreamBuilder()
                           height: 16.0,
                           child: TextField(
                             onEditingComplete: () {
