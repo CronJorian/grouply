@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../colors.dart' as colors;
+import '../notifiers/form_notifier.dart';
 import '../views/form_login.dart';
-import '../views/form_notifier.dart';
 import '../views/form_signup.dart';
 
 // TODO: make login view stateful to save userID in the process
@@ -42,6 +42,9 @@ class _LoginState extends State<Login> {
                     bottom: 40,
                   ),
                 ),
+                // TODO: Instead of two widgets, use one with a lost, or something like that, so that it won't "reload",
+                // ! but instead let a third input form (for password confirmation) appear and change the buttons and their
+                // ! respective functionality
                 formNotifier.isSignUp ? FormSignUp() : FormLogin()
               ],
             ),

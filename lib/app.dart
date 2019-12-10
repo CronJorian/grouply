@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:grouply/views/form_listview.dart';
-import 'package:grouply/views/form_taskview.dart';
-import 'views/form_notifier.dart';
 import 'package:provider/provider.dart';
 
 import 'activities/home.dart';
 import 'activities/login.dart';
 import 'activities/todo.dart';
 import 'colors.dart';
+import 'notifiers/form_notifier.dart';
+import 'notifiers/login_notifier.dart';
+import 'views/form_listview.dart';
 
 class GrouplyApp extends StatelessWidget {
   @override
@@ -16,12 +16,15 @@ class GrouplyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<FormNotifier>.value(
           value: FormNotifier(),
+        ),
+        ChangeNotifierProvider<LoginNotifier>.value(
+          value: LoginNotifier(),
         )
       ],
       child: MaterialApp(
         theme: retroTheme,
-        initialRoute: '/tasklist',
-        home: Login(),
+        initialRoute: '/login',
+        home: Home(),
         routes: {
           // create all routes here
           // either use the Navigator or the MaterialPageRoute
@@ -30,8 +33,9 @@ class GrouplyApp extends StatelessWidget {
           // you don't need to fully read these, but make sure you understand how to navigate
           '/login': (context) => Login(),
           '/todolist': (context) => TodoList(),
-          '/tasklist': (context) => ListTileCheckbox(),
-          '/taskview': (context) => TaskView(),
+          '/tasklist': (context) => Checklist(),
+          // This deals as a placeholder for a possible default list
+          '/home': (context) => Home(),
         },
       ),
     );
