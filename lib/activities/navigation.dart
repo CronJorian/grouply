@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:grouply/activities/login.dart';
 import 'package:grouply/views/form_listview.dart';
 import 'package:grouply/views/form_login.dart';
+import 'package:grouply/views/form_signup.dart';
 
 import '../colors.dart' as colors;
 import '../views/form_navigation.dart';
@@ -67,7 +69,7 @@ class _TaskListState extends State<TaskList> {
                 trailing: Icon(Icons.power_settings_new),
                 onTap: () {
                   Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => FormLogin()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
                 },
               ),
             ]
