@@ -95,7 +95,7 @@ class _FormLoginState extends State<FormLogin> {
             .user;
         loginNotifier.loginIn(userData);
         await Navigator.of(context)
-            .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+            .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
       } catch (e) {
         print(e.message);
       }

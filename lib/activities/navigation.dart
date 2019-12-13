@@ -25,51 +25,79 @@ class _TaskListState extends State<TaskList> {
   @override
   Widget build(BuildContext context) {
     final LoginNotifier loginNotifier = Provider.of<LoginNotifier>(context);
-
+    const String myuserid = "ErDtqhy205Pe1X3QhxUXkVulYNz2";
     return Scaffold(
       appBar: AppBar(title: Text("Grouply"), centerTitle: true),
       drawer: Drawer(
+        // TODO: Handle invalid uid / no document found for specific user
         child: ListView(children: <Widget>[
           UserAccountsDrawerHeader(
-
             accountName: StreamBuilder<DocumentSnapshot>(
-              stream: Firestore.instance.collection('users').document(loginNotifier.user?.uid).snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) return Text('Loading username...');
-                if (snapshot.hasError) return Text('Error beim laden des Benutzernamens');
-                return Text(snapshot.data.exists ? snapshot.data['username'] : 'Fehler');
-              }
-            ),
-            accountEmail: Text(loginNotifier.user?.email ?? "Keine E-Mail gefunden."),
+                stream: Firestore.instance
+                    .collection('users')
+                // TODO: Change back
+                //  .document(loginNotifier.user?.uid)
+                 .document(myuserid).snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) return Text('Loading username...');
+                  if (snapshot.hasError) {
+                    return Text('Error beim laden des Benutzernamens');
+                  }
+                  return Text(snapshot.data.exists
+                      ? snapshot.data['username']
+                      : 'Fehler');
+                }),
+            accountEmail:
+            // TODO: Change back
+//                Text(loginNotifier.user?.email ?? "Keine E-Mail gefunden."),
+            Text("Keine E-Mail gefunden."),
+
             currentAccountPicture: CircleAvatar(
               backgroundColor: Colors.white,
               child: Text("Max"),
             ),
           ),
-          ListTile(
-            title: Text("Example List"),
-            trailing: Icon(Icons.arrow_right),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Checklist(),
-                ),
+          StreamBuilder<QuerySnapshot>(
+            // TODO: Change back
+            stream: Firestore.instance.collection("listPermissions").where("userID", isEqualTo: Firestore.instance.collection('users').document(loginNotifier.user.uid)).snapshots(),
+            // stream: Firestore.instance.collection("listPermissions").where("userID", isEqualTo: Firestore.instance.collection('users').document(myuserid)).snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) return LinearProgressIndicator();
+              return ListView.builder(
+                itemCount: snapshot.data.documents.length,
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  if(!snapshot.hasData) return CircularProgressIndicator();
+                  return ListTile(
+                      title: StreamBuilder<DocumentSnapshot>(
+                          stream: snapshot.data.documents[index]["listID"]
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) return Text("Loading...");
+                            return Text(snapshot.data["title"]);
+                          }
+                      ),
+                      trailing: Icon(Icons.arrow_right),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Checklist(),
+                          ),
+                        );
+                      });
+                },
               );
             },
           ),
+          Divider(),
           ListTile(
-            title: Text("Sommerreise"),
-            trailing: Icon(Icons.arrow_right),
+            title: Text("add list"),
+            trailing: Icon(Icons.add),
             onTap: () {
               Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Checklist(),
-                ),
-              );
             },
           ),
           Divider(),
@@ -80,21 +108,24 @@ class _TaskListState extends State<TaskList> {
               Navigator.pop(context);
             },
           ),
+          Divider(),
           ListTile(
             title: Text("log out"),
             trailing: Icon(Icons.exit_to_app),
             onTap: () {
+              loginNotifier.logOut();
               Navigator.pop(context);
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Login()));
             },
           ),
+          Divider(),
         ]),
       ),
       body: Column(
         children: tasks.map((task) => TaskCard(task: task)).toList(),
         //children: _buildBody(context, loginNotifier.user.uid),
-        //loginNotifier.isSignUp ? FormSignUp() : FormLogin()
+        //loginNotifier.isSignUp ? FormSignUp() : FormLogin(),
       ),
     );
   }
