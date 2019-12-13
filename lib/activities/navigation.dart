@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,14 +25,22 @@ class _TaskListState extends State<TaskList> {
   @override
   Widget build(BuildContext context) {
     final LoginNotifier loginNotifier = Provider.of<LoginNotifier>(context);
-    
+
     return Scaffold(
       appBar: AppBar(title: Text("Grouply"), centerTitle: true),
       drawer: Drawer(
         child: ListView(children: <Widget>[
           UserAccountsDrawerHeader(
-            accountName: Text("Wähle eine Liste aus..."),
-            accountEmail: Text("Oder erstelle eine neue Liste"),
+
+            accountName: StreamBuilder<DocumentSnapshot>(
+              stream: Firestore.instance.collection('users').document(loginNotifier.user?.uid).snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) return Text('Loading username...');
+                if (snapshot.hasError) return Text('Error beim laden des Benutzernamens');
+                return Text(snapshot.data.exists ? snapshot.data['username'] : 'Fehler');
+              }
+            ),
+            accountEmail: Text(loginNotifier.user?.email ?? "Keine E-Mail gefunden."),
             currentAccountPicture: CircleAvatar(
               backgroundColor: Colors.white,
               child: Text("Max"),

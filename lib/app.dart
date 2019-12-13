@@ -24,7 +24,7 @@ class GrouplyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         theme: retroTheme,
-        initialRoute: '/taskCard',
+        initialRoute: '/login',
         home: Home(),
         routes: {
           // create all routes here
