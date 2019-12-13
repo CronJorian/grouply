@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:grouply/activities/home.dart';
-import 'package:pedantic/pedantic.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import '../colors.dart' as colors;
 import '../task.dart';

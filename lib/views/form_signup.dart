@@ -1,12 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
 
-import '../activities/home.dart';
 import '../colors.dart' as colors;
+import '../notifiers/form_notifier.dart';
+import '../notifiers/login_notifier.dart';
 import '../views/form_input.dart';
-import '../views/form_notifier.dart';
 
 class FormSignUp extends StatefulWidget {
   @override
@@ -68,7 +67,7 @@ class _FormSignUpState extends State<FormSignUp> {
                   color: colors.cardColor,
                   onPressed: signUp,
                   child: Text(
-                    'SUBMIT',
+                    'BESTÄTIGEN',
                     style: TextStyle(
                       color: colors.backgroundColor,
                     ),
@@ -96,6 +95,7 @@ class _FormSignUpState extends State<FormSignUp> {
   }
 
   void signUp() async {
+    final LoginNotifier loginNotifier = Provider.of<LoginNotifier>(context);
     final formSignUpState = _formSignUpKey.currentState;
     final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -107,15 +107,10 @@ class _FormSignUpState extends State<FormSignUp> {
           password: _password,
         ))
             .user;
-        unawaited(
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HomeScreenTest(
-                user: result,
-              ),
-            ),
-          ),
+        loginNotifier.loginIn(result);
+        await Navigator.of(context).pushNamedAndRemoveUntil(
+          '/',
+          (Route<dynamic> route) => false,
         );
       } catch (e) {
         print(e.message);

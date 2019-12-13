@@ -1,13 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:grouply/views/form_listview.dart';
-import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
 
-import '../activities/home.dart';
 import '../colors.dart' as colors;
+import '../notifiers/form_notifier.dart';
+import '../notifiers/login_notifier.dart';
 import '../views/form_input.dart';
-import '../views/form_notifier.dart';
 
 class FormLogin extends StatefulWidget {
   @override
@@ -51,7 +49,7 @@ class _FormLoginState extends State<FormLogin> {
               Container(
                 child: FlatButton(
                   child: Text(
-                    'SIGNUP',
+                    'REGISTRIEREN',
                   ),
                   onPressed: () {
                     formNotifier.toggleSignUp();
@@ -83,6 +81,7 @@ class _FormLoginState extends State<FormLogin> {
 // credentials validation via firebase_auth
   void signIn() async {
     // TODO: validate user
+    final LoginNotifier loginNotifier = Provider.of<LoginNotifier>(context);
     final formLoginState = _formLoginKey.currentState;
     // https://pub.dev/packages/firebase_auth
     final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -94,16 +93,9 @@ class _FormLoginState extends State<FormLogin> {
           password: _password,
         ))
             .user;
-        // * WARNING: `unawaited` might cause a problem
-        unawaited(
-          // TODO: Either change this so a named route or change the app.dart file. It would probably be better to change this route and outsource it to the app.dart, where all routes are written.
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ListView(),
-            ),
-          ),
-        );
+        loginNotifier.loginIn(userData);
+        await Navigator.of(context)
+            .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
       } catch (e) {
         print(e.message);
       }

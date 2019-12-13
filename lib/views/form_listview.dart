@@ -1,15 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
-import 'package:grouply/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-class ListTileCheckbox extends StatefulWidget {
-  // const ListTileCheckbox({
-  //   Key key,
-  // }) : super(key: key);
+import '../colors.dart';
 
-  const ListTileCheckbox({
+class Checklist extends StatefulWidget {
+  const Checklist({
     this.label,
     this.padding,
     this.onChanged,
@@ -20,31 +16,28 @@ class ListTileCheckbox extends StatefulWidget {
   final ValueChanged<bool> onChanged;
 
   @override
-  _ListTileCheckboxState createState() => _ListTileCheckboxState();
+  _ChecklistState createState() => _ChecklistState();
 }
 
-class _ListTileCheckboxState extends State<ListTileCheckbox> {
+class _ChecklistState extends State<Checklist> {
   final GlobalKey<FormState> _formTextboxKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
 
   Widget buildListItem(BuildContext context, DocumentSnapshot document) {
     return Scaffold(
       body: Container(
-        margin: EdgeInsets.fromLTRB(8.0, 1.0, 8.0, 1.0),
-        padding: EdgeInsets.fromLTRB(12.0, 0.0, 0.0, 0.0),
+        margin: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+        padding: EdgeInsets.only(left: 12.0),
         decoration: myBoxDecoration(),
         child: Row(
           children: <Widget>[
-            GestureDetector(
-              onTap:
-                  () {}, // TODO: Bool 'complete' verändern - CHeckboxfunktionalität
-              child: Container(
-                child: Theme(
-                  data: ThemeData(unselectedWidgetColor: primaryColor),
-                  child: Checkbox(
-                      activeColor: primaryColor,
-                      value: document['complete'],
-                      onChanged: (bool newValue) => widget.onChanged(newValue)),
+            Container(
+              child: Theme(
+                data: ThemeData(unselectedWidgetColor: primaryColor),
+                child: Checkbox(
+                  activeColor: primaryColor,
+                  value: document['complete'],
+                  onChanged: (v) => changeStatus(document),
                 ),
               ),
             ),
@@ -60,17 +53,12 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
                           document['title'],
                           style: TextStyle(color: primaryColor),
                         ),
-                  subtitle: document['complete']
-                      ? Text(
-                          document['description'],
-                          style: TextStyle(color: primaryColor),
-                        )
-                      : Text(
-                          document['description'],
-                          style: TextStyle(color: primaryColor),
-                        ),
+                  subtitle: Text(
+                    document['description'],
+                  ),
                   trailing: IconButton(
-                    icon: Icon(Icons.insert_emoticon),
+                    icon: Icon(
+                        Icons.insert_emoticon), // TODO: Add variable UserIcon
                     color: primaryColor,
                     iconSize: 35.0,
                     onPressed: () => {}, // TODO: Personenauswahl
@@ -87,81 +75,91 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.dehaze),
-            onPressed: () => {},
+      appBar: AppBar(
+        title: Text("Listenname"), // TODO: Listenname dynamisch machen
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.share),
+            onPressed: () => {}, // TODO: Liste teilen
           ),
-          // TODO: Listenname dynamisch machen
-          title: Text("Listenname"),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.share),
-              onPressed: () => {}, // TODO: Liste teilen
-            ),
-            PopupMenuButton<String>(
-              onSelected: choiceAction,
-              itemBuilder: (BuildContext context) {
-                return Constants.choices.map((String choice) {
+          PopupMenuButton<String>(
+            onSelected: choiceAction,
+            itemBuilder: (BuildContext context) {
+              return Constants.choices.map(
+                (String choice) {
                   return PopupMenuItem<String>(
-                      value: choice,
-                      child: Text(choice,
-                          style: TextStyle(
-                            color: primaryColor,
-                          )));
-                }).toList();
-              },
-            )
-          ],
-        ),
-        body: Column(
-          children: <Widget>[
-            LimitedBox(
-              maxHeight: 540.0,
-              child: StreamBuilder(
-                  stream: Firestore.instance.collection('tasks').snapshots(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) return const Text('loading...');
-                    return ListView.builder(
-                      itemExtent: 80.0,
-                      itemCount: snapshot.data.documents.length,
-                      itemBuilder: (context, index) => buildListItem(
-                          context, snapshot.data.documents[index]),
-                    );
-                  }),
-            ),
-          ],
-        ),
-        bottomSheet: Container(
-          decoration: myBoxDecoration(),
-          padding: EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
-          child: Row(
-            children: [
-              Container(
-                  width: 375.0,
-                  child: Form(
-                    key: _formTextboxKey,
-                    child: TextFormField(
-                      controller: _titleController,
-                      onEditingComplete: saveTitle,
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                        return null;
-                      },
+                    value: choice,
+                    child: Text(
+                      choice,
                       style: TextStyle(
                         color: primaryColor,
                       ),
-                      decoration: const InputDecoration(
-                          hintText: 'Erstelle eine neue Aufgabe...',
-                          hintStyle: TextStyle(color: primaryColor)),
                     ),
-                  )),
-            ],
+                  );
+                },
+              ).toList();
+            },
           ),
-          margin: EdgeInsets.all(8.0),
-        ));
+        ],
+      ),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: Firestore.instance.collection('tasks').snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Align(
+                    alignment: Alignment.topCenter,
+                    child: LinearProgressIndicator(),
+                  );
+                }
+                return Scrollbar(
+                  child: ListView.builder(
+                    itemExtent: 84.0,
+                    itemCount: snapshot.data.documents.length,
+                    itemBuilder: (context, index) {
+                      return buildListItem(
+                        context,
+                        snapshot.data.documents[index],
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+          Container(
+            decoration: myBoxDecoration(),
+            padding: EdgeInsets.only(left: 16.0),
+            child: Container(
+              child: Form(
+                key: _formTextboxKey,
+                child: TextFormField(
+                  controller: _titleController,
+                  onEditingComplete: saveTitle,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
+                  style: TextStyle(
+                    color: primaryColor,
+                  ),
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Erstelle eine neue Aufgabe...',
+                    hintStyle: TextStyle(color: primaryColor),
+                  ),
+                ),
+              ),
+            ),
+            margin: EdgeInsets.all(8.0),
+          ),
+        ],
+      ),
+    );
   }
 
   void choiceAction(String choice) {
@@ -175,7 +173,9 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
         width: 2.5,
         color: primaryColor,
       ),
-      borderRadius: BorderRadius.all(Radius.circular(12.0)),
+      borderRadius: BorderRadius.all(
+        Radius.circular(12.0),
+      ),
     );
   }
 
@@ -204,10 +204,15 @@ class _ListTileCheckboxState extends State<ListTileCheckbox> {
   void initState() {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     super.initState();
-   }
+  }
 
-  void changeStatus() async {
+  void changeStatus(DocumentSnapshot document) {
     final Firestore db = Firestore.instance;
+    db.collection('tasks').document(document.documentID).updateData(
+      {
+        'complete': !document['complete'],
+      },
+    );
   }
 }
 
