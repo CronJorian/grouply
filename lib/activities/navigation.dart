@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:grouply/colors.dart' as c;
 import 'package:provider/provider.dart';
 
 import '../activities/login.dart';
@@ -54,13 +56,12 @@ class _TaskListState extends State<TaskList> {
 
             currentAccountPicture: CircleAvatar(
               backgroundColor: Colors.white,
-              child: Text("Max"),
             ),
           ),
           StreamBuilder<QuerySnapshot>(
             // TODO: Change back
-            stream: Firestore.instance.collection("listPermissions").where("userID", isEqualTo: Firestore.instance.collection('users').document(loginNotifier.user.uid)).snapshots(),
-            // stream: Firestore.instance.collection("listPermissions").where("userID", isEqualTo: Firestore.instance.collection('users').document(myuserid)).snapshots(),
+            // stream: Firestore.instance.collection("listPermissions").where("userID", isEqualTo: Firestore.instance.collection('users').document(loginNotifier.user.uid)).snapshots(),
+            stream: Firestore.instance.collection("listPermissions").where("userID", isEqualTo: Firestore.instance.collection('users').document(myuserid)).snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) return LinearProgressIndicator();
               return ListView.builder(
@@ -94,11 +95,19 @@ class _TaskListState extends State<TaskList> {
           ),
           Divider(),
           ListTile(
-            title: Text("add list"),
             trailing: Icon(Icons.add),
-            onTap: () {
-              Navigator.pop(context);
-            },
+            title: TextFormField(
+              decoration: InputDecoration(labelText: "create a new list..."),
+              keyboardType: TextInputType.text,
+              maxLines: 1,
+              validator: (val) => val.isEmpty ? "Enter a listname" : null,
+                onChanged: (val){
+                //setState(() => 'lists' = val);
+                },
+                onSaved: (String listname) {
+                  final listname = Firestore.instance;
+                }
+            ),
           ),
           Divider(),
           ListTile(
@@ -118,6 +127,7 @@ class _TaskListState extends State<TaskList> {
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Login()));
             },
+
           ),
           Divider(),
         ]),
