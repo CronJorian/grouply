@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:grouply/colors.dart' as c;
 import 'package:provider/provider.dart';
 
@@ -24,8 +25,14 @@ class _TaskListState extends State<TaskList> {
     Task(author: 'Max', text: 'Milch einkaufen'),
   ];
 
+  @required Function callbackSetter;
+
+  final TextEditingController _listController = TextEditingController();
+  final GlobalKey<FormState> _formTextboxKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
+    final TextEditingController _listController = TextEditingController();
     final LoginNotifier loginNotifier = Provider.of<LoginNotifier>(context);
     const String myuserid = "ErDtqhy205Pe1X3QhxUXkVulYNz2";
     return Scaffold(
@@ -97,16 +104,13 @@ class _TaskListState extends State<TaskList> {
           ListTile(
             trailing: Icon(Icons.add),
             title: TextFormField(
-              decoration: InputDecoration(labelText: "create a new list..."),
+              decoration: InputDecoration(hintText: "create a new list name..."),
               keyboardType: TextInputType.text,
+              controller: _listController,
               maxLines: 1,
+              onEditingComplete: saveList,
               validator: (val) => val.isEmpty ? "Enter a listname" : null,
-                onChanged: (val){
-                //setState(() => 'lists' = val);
-                },
-                onSaved: (String listname) {
-                  final listname = Firestore.instance;
-                }
+              //  onChanged: (String val) => callbackSetter (trimInput ? value.trim() :value),
             ),
           ),
           Divider(),
@@ -124,10 +128,8 @@ class _TaskListState extends State<TaskList> {
             onTap: () {
               loginNotifier.logOut();
               Navigator.pop(context);
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Login()));
-            },
-
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+              },
           ),
           Divider(),
         ]),
@@ -138,5 +140,38 @@ class _TaskListState extends State<TaskList> {
         //loginNotifier.isSignUp ? FormSignUp() : FormLogin(),
       ),
     );
+  }
+
+  void saveList() async {
+    final formTextState = _formTextboxKey.currentState;
+    final Firestore db = Firestore.instance;
+    formTextState.save();
+    if (formTextState.validate()) {
+      try {
+        await db.collection("lists").add(
+          {
+            'title': _listController.text,
+            'description': '',
+            'complete': false,
+          },
+        );
+      } catch (e) {
+        print(e.message);
+      }
+      _listController.clear();
+    }
+    initState();
+  }
+
+  void initState (){
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    super.initState();
+  }
+
+  void changeStatus(DocumentSnapshot document){
+    final Firestore db = Firestore.instance;
+    db.collection('lists').document(document.documentID).updateData({
+      'complete': !document['complete'],
+    });
   }
 }
