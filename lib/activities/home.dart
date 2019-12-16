@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:grouply/activities/navigation.dart';
+
+import '../activities/navigation.dart';
 
 class Home extends StatefulWidget {
   const Home({

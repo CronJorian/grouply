@@ -2,14 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:grouply/colors.dart' as c;
 import 'package:provider/provider.dart';
 
-import '../activities/login.dart';
+import '../colors.dart' as c;
 import '../notifiers/login_notifier.dart';
-import '../task.dart';
-import '../views/form_listview.dart';
-import '../views/form_navigation.dart';
+import 'form_listview.dart';
 
 class TaskList extends StatefulWidget {
   @override
