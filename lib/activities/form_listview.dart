@@ -8,11 +8,9 @@ import '../colors.dart';
 class Checklist extends StatefulWidget {
   const Checklist({
     this.listID,
-    this.title,
   });
 
   final DocumentReference listID;
-  final DocumentReference title;
 
   @override
   _ChecklistState createState() => _ChecklistState();
