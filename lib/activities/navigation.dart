@@ -29,12 +29,11 @@ class _TaskListState extends State<TaskList> {
 
   final TextEditingController _listController = TextEditingController();
   final GlobalKey<FormState> _formTextboxKey = GlobalKey<FormState>();
+  final String myuserid = "ErDtqhy205Pe1X3QhxUXkVulYNz2";
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController _listController = TextEditingController();
     final LoginNotifier loginNotifier = Provider.of<LoginNotifier>(context);
-    const String myuserid = "ErDtqhy205Pe1X3QhxUXkVulYNz2";
     return Scaffold(
       appBar: AppBar(title: Text("Grouply"), centerTitle: true),
       drawer: Drawer(
@@ -62,7 +61,7 @@ class _TaskListState extends State<TaskList> {
             Text("Keine E-Mail gefunden."),
 
             currentAccountPicture: CircleAvatar(
-              backgroundColor: Colors.white,
+              backgroundColor: c.cardColor,
             ),
           ),
           StreamBuilder<QuerySnapshot>(
@@ -103,14 +102,16 @@ class _TaskListState extends State<TaskList> {
           Divider(),
           ListTile(
             trailing: Icon(Icons.add),
-            title: TextFormField(
-              decoration: InputDecoration(hintText: "create a new list name..."),
-              keyboardType: TextInputType.text,
-              controller: _listController,
-              maxLines: 1,
-              onEditingComplete: saveList,
-              validator: (val) => val.isEmpty ? "Enter a listname" : null,
-              //  onChanged: (String val) => callbackSetter (trimInput ? value.trim() :value),
+            title: Form(
+              key: _formTextboxKey,
+              child: TextFormField(
+                decoration: InputDecoration(hintText: "create a new list name..."),
+                keyboardType: TextInputType.text,
+                controller: _listController,
+                maxLines: 1,
+                onEditingComplete: saveList,
+                validator: (val) => val.isEmpty ? "Enter a listname" : null,
+              ),
             ),
           ),
           Divider(),
@@ -151,10 +152,16 @@ class _TaskListState extends State<TaskList> {
         await db.collection("lists").add(
           {
             'title': _listController.text,
-            'description': '',
-            'complete': false,
+            'uri': null,
           },
-        );
+        ).then((result)async {
+          await db.collection("listPermissions").add(
+            {
+              'listID': result,
+              'userID': Firestore.instance.collection('users').document(myuserid),
+            }
+          );
+          });
       } catch (e) {
         print(e.message);
       }
@@ -168,10 +175,4 @@ class _TaskListState extends State<TaskList> {
     super.initState();
   }
 
-  void changeStatus(DocumentSnapshot document){
-    final Firestore db = Firestore.instance;
-    db.collection('lists').document(document.documentID).updateData({
-      'complete': !document['complete'],
-    });
-  }
 }
