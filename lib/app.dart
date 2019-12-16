@@ -33,7 +33,7 @@ class GrouplyApp extends StatelessWidget {
           // you don't need to fully read these, but make sure you understand how to navigate
           '/login': (context) => Login(),
           '/taskCard': (context) => TaskList(),
-          '/tasklist': (context) => Checklist(listID: null,title: null,),
+          '/tasklist': (context) => Checklist(listID: null),
           // This deals as a placeholder for a possible default list
           '/home': (context) => Home(),
         },
