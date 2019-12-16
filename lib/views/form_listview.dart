@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:grouply/activities/navigation.dart';
 
 import '../colors.dart';
 
 class Checklist extends StatefulWidget {
-
-  const Checklist(this.listID, {
+  const Checklist(
+    this.listID, {
     this.label,
     this.padding,
     this.onChanged,
@@ -24,56 +25,6 @@ class Checklist extends StatefulWidget {
 class _ChecklistState extends State<Checklist> {
   final GlobalKey<FormState> _formTextboxKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
-
-
-  Widget buildListItem(BuildContext context, DocumentSnapshot document) {
-    return Scaffold(
-      body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-        padding: EdgeInsets.only(left: 12.0),
-        decoration: myBoxDecoration(),
-        child: Row(
-          children: <Widget>[
-            Container(
-              child: Theme(
-                data: ThemeData(unselectedWidgetColor: primaryColor),
-                child: Checkbox(
-                  activeColor: primaryColor,
-                  value: document['complete'],
-                  onChanged: (v) => changeStatus(document),
-                ),
-              ),
-            ),
-            Expanded(
-              child: ListTile(
-                  title: document['complete']
-                      ? Text(document['title'],
-                          style: TextStyle(
-                            decoration: TextDecoration.lineThrough,
-                            color: primaryColor,
-                          ))
-                      : Text(
-                          document['title'],
-                          style: TextStyle(color: primaryColor),
-                        ),
-                  subtitle: Text(
-                    document['description'],
-                  ),
-                  trailing: IconButton(
-                    icon: Icon(
-                        Icons.insert_emoticon), // TODO: Add variable UserIcon
-                    color: primaryColor,
-                    iconSize: 35.0,
-                    onPressed: () => {}, // TODO: Personenauswahl
-                  ),
-                  onTap: () {} // TODO: Aufruf der Detailansicht.
-                  ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,11 +56,15 @@ class _ChecklistState extends State<Checklist> {
           ),
         ],
       ),
+      drawer: TaskList(),
       body: Column(
         children: <Widget>[
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: Firestore.instance.collection('tasks').where('listID', isEqualTo: this.widget.listID).snapshots(),
+              stream: Firestore.instance
+                  .collection('tasks')
+                  .where('listID', isEqualTo: this.widget.listID)
+                  .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Align(
@@ -159,6 +114,53 @@ class _ChecklistState extends State<Checklist> {
               ),
             ),
             margin: EdgeInsets.all(8.0),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildListItem(BuildContext context, DocumentSnapshot document) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+      padding: EdgeInsets.only(left: 12.0),
+      decoration: myBoxDecoration(),
+      child: Row(
+        children: <Widget>[
+          Container(
+            child: Theme(
+              data: ThemeData(unselectedWidgetColor: primaryColor),
+              child: Checkbox(
+                activeColor: primaryColor,
+                value: document['complete'],
+                onChanged: (v) => changeStatus(document),
+              ),
+            ),
+          ),
+          Expanded(
+            child: ListTile(
+                title: document['complete']
+                    ? Text(document['title'],
+                        style: TextStyle(
+                          decoration: TextDecoration.lineThrough,
+                          color: primaryColor,
+                        ))
+                    : Text(
+                        document['title'],
+                        style: TextStyle(color: primaryColor),
+                      ),
+                subtitle: Text(
+                  document['description'],
+                ),
+                trailing: IconButton(
+                  icon: Icon(
+                      Icons.insert_emoticon), // TODO: Add variable UserIcon
+                  color: primaryColor,
+                  iconSize: 35.0,
+                  onPressed: () => {}, // TODO: Personenauswahl
+                ),
+                onTap: () {} // TODO: Aufruf der Detailansicht.
+                ),
           ),
         ],
       ),

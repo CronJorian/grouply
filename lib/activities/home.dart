@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../notifiers/login_notifier.dart';
+import 'package:grouply/activities/navigation.dart';
 
 class Home extends StatefulWidget {
   const Home({
@@ -18,16 +16,9 @@ class HomeState extends State<Home> {
     // Uses a "globally" defined object (in app.dart) and can react on changes
     // This is a lot easier/cleaner than passing variables as an argument,
     // if you need them more often or in deeper nested children
-    final LoginNotifier loginNotifier = Provider.of<LoginNotifier>(context);
     return Scaffold(
-      appBar: AppBar(
-        // If no user is logged is provided there will be no information.
-        title: Text(loginNotifier.user?.email ?? "Kein User ist angemeldet."),
-      ),
-      floatingActionButton: FloatingActionButton( //TODO: Remove when not needed anymore
-        child: Icon(Icons.line_style),
-        onPressed: () => Navigator.pushNamed(context, '/tasklist'),
-      ),
+      appBar: AppBar(),
+      drawer: TaskList(),
     );
   }
 }
