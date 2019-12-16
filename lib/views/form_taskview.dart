@@ -75,10 +75,10 @@ class _taskViewState extends State<TaskView> {
                 TextEditingController();
             if (snapshot.hasData)
               _descriptionController.text = snapshot.data["description"];
-      _printLatestValue() {
+     /* _printLatestValue() {
            print("Second text field: ${_descriptionController.text}");
            
-      }
+      }*/
   /*void initState(){
     super.initState();
     _descriptionController.addListener(_printLatestValue);
@@ -116,14 +116,13 @@ class _taskViewState extends State<TaskView> {
                                 height: 35.0,
                                 child: TextField(
                                   textAlign: TextAlign.left,
-                                  keyboardType: TextInputType.multiline,
-                                  onChanged: (abc) {
-                                    print(abc);
+                                  onSubmitted: (newValue) {
+                                    print("-------------------------${newValue}");
                                     Firestore.instance
                                         .collection('tasks')
                                         .document(widget.document.documentID)
                                         .updateData(
-                                      {'description': abc},
+                                      {'description': newValue},
                                     );
                                   },
                                   controller: _descriptionController,
