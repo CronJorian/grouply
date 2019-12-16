@@ -19,6 +19,30 @@ class TaskView extends StatefulWidget {
 
 class _taskViewState extends State<TaskView> {
 
+  // * DateTimePicker
+  static DateTime selectedDate = DateTime.now();
+
+  Future<Null> _selectStartDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2019, 12),
+      lastDate: DateTime(2025, 12),
+    );
+    if(picked != null && picked != selectedDate)  {
+      setState(() {
+        selectedDate = picked;
+      });
+    } 
+  }
+
+  // * Date Format
+  formatDate(DateTime dateTime) {
+    String forDate = DateFormat('dd.MM.yyyy').format(dateTime);
+    return forDate;
+  }
+
+
   final GlobalKey<FormState> _formTaskKey = GlobalKey<FormState>();
   
   @override
@@ -168,57 +192,24 @@ class _taskViewState extends State<TaskView> {
                         children: <Widget>[
                           Expanded(
                               child: Text(
-                                'Startdatum:',
+                                'Fertigstellung:',
                                 style: TextStyle(color: Colors.black),
                               ),
                               flex: 0),
                           Expanded(
-                            child: EditableText(
-                              backgroundCursorColor: Colors.black,
-                              controller:
-                                  TextEditingController(text: '12.12.2019'),
-                              cursorColor: Colors.black,
-                              focusNode: FocusNode(),
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.black),
+                            child: 
+                            FlatButton(
+                              onPressed: () => _selectStartDate(context),
+                              child: Text(formatDate(selectedDate)),
+                              color: Colors.white,
+                              textColor: Colors.black,
+                              //shape: RoundedRectangleBorder(side: BorderSide(color: Colors.white)),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.white),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(8.0),
-                        ),
-                      ),
-                      padding: EdgeInsets.all(5.0),
-                      margin: EdgeInsets.all(3.0),
-                      //key: _formTaskKey,
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                              child: Text(
-                                'Enddatum:',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              flex: 0),
-                          Expanded(
-                            child: EditableText(
-                              backgroundCursorColor: Colors.black,
-                              controller:
-                                  TextEditingController(text: '16.12.2019'),
-                              cursorColor: Colors.black,
-                              focusNode: FocusNode(),
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    
                     Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
