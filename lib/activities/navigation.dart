@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,7 +30,6 @@ class _TaskListState extends State<TaskList> {
 
   final TextEditingController _listController = TextEditingController();
   final GlobalKey<FormState> _formTextboxKey = GlobalKey<FormState>();
-  final String myuserid = "ErDtqhy205Pe1X3QhxUXkVulYNz2";
 
   @override
   Widget build(BuildContext context) {
@@ -38,102 +38,7 @@ class _TaskListState extends State<TaskList> {
       appBar: AppBar(title: Text("Grouply"), centerTitle: true),
       drawer: Drawer(
         // TODO: Handle invalid uid / no document found for specific user
-        child: ListView(children: <Widget>[
-          UserAccountsDrawerHeader(
-            accountName: StreamBuilder<DocumentSnapshot>(
-                stream: Firestore.instance
-                    .collection('users')
-                // TODO: Change back
-                //  .document(loginNotifier.user?.uid)
-                 .document(myuserid).snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) return Text('Loading username...');
-                  if (snapshot.hasError) {
-                    return Text('Error beim laden des Benutzernamens');
-                  }
-                  return Text(snapshot.data.exists
-                      ? snapshot.data['username']
-                      : 'Fehler');
-                }),
-            accountEmail:
-            // TODO: Change back
-//                Text(loginNotifier.user?.email ?? "Keine E-Mail gefunden."),
-            Text("Keine E-Mail gefunden."),
-
-            currentAccountPicture: CircleAvatar(
-              backgroundColor: c.cardColor,
-            ),
-          ),
-          StreamBuilder<QuerySnapshot>(
-            // TODO: Change back
-            // stream: Firestore.instance.collection("listPermissions").where("userID", isEqualTo: Firestore.instance.collection('users').document(loginNotifier.user.uid)).snapshots(),
-            stream: Firestore.instance.collection("listPermissions").where("userID", isEqualTo: Firestore.instance.collection('users').document(myuserid)).snapshots(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) return LinearProgressIndicator();
-              return ListView.builder(
-                itemCount: snapshot.data.documents.length,
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  if(!snapshot.hasData) return CircularProgressIndicator();
-                  return ListTile(
-                      title: StreamBuilder<DocumentSnapshot>(
-                          stream: snapshot.data.documents[index]["listID"]
-                              .snapshots(),
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData) return Text("Loading...");
-                            return Text(snapshot.data["title"]);
-                          }
-                      ),
-                      trailing: Icon(Icons.arrow_right),
-                      onTap: () {
-                        Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Checklist(),
-                          ),
-                        );
-                      });
-                },
-              );
-            },
-          ),
-          Divider(),
-          ListTile(
-            trailing: Icon(Icons.add),
-            title: Form(
-              key: _formTextboxKey,
-              child: TextFormField(
-                decoration: InputDecoration(hintText: "create a new list name..."),
-                keyboardType: TextInputType.text,
-                controller: _listController,
-                maxLines: 1,
-                onEditingComplete: saveList,
-                validator: (val) => val.isEmpty ? "Enter a listname" : null,
-              ),
-            ),
-          ),
-          Divider(),
-          ListTile(
-            title: Text("close"),
-            trailing: Icon(Icons.close),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          Divider(),
-          ListTile(
-            title: Text("log out"),
-            trailing: Icon(Icons.exit_to_app),
-            onTap: () {
-              loginNotifier.logOut();
-              Navigator.pop(context);
-              Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
-              },
-          ),
-          Divider(),
-        ]),
+        child: buildListView(loginNotifier, context),
       ),
       body: Column(
         children: tasks.map((task) => TaskCard(task: task)).toList(),
@@ -143,7 +48,101 @@ class _TaskListState extends State<TaskList> {
     );
   }
 
+  ListView buildListView(LoginNotifier loginNotifier, BuildContext context) {
+    if(loginNotifier.user == null) return null;
+    return ListView(children: <Widget>[
+        UserAccountsDrawerHeader(
+          accountName: StreamBuilder<DocumentSnapshot>(
+              stream: Firestore.instance
+                  .collection('users')
+              .document(loginNotifier.user?.uid).snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) return Text('Loading username...');
+                if (snapshot.hasError) {
+                  return Text('Error beim laden des Benutzernamens.');
+                }
+                return Text(snapshot.data.exists
+                    ? snapshot.data['username']
+                    : 'Benutzername nicht gefunden.');
+              }),
+          accountEmail: Text(loginNotifier.user?.email ?? "Keine E-Mail gefunden."),
+
+          currentAccountPicture: CircleAvatar(
+            backgroundColor: c.cardColor,
+          ),
+        ),
+        StreamBuilder<QuerySnapshot>(
+          stream: Firestore.instance.collection("listPermissions").where("userID", isEqualTo: Firestore.instance.collection('users').document(loginNotifier.user.uid)).snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) return LinearProgressIndicator();
+            return ListView.builder(
+              itemCount: snapshot.data.documents.length,
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                if(!snapshot.hasData) return CircularProgressIndicator();
+                return ListTile(
+                    title: StreamBuilder<DocumentSnapshot>(
+                        stream: snapshot.data.documents[index]["listID"]
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) return Text("Loading...");
+                          return Text(snapshot.data["title"]);
+                        }
+                    ),
+                    trailing: Icon(Icons.arrow_right),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Checklist(),
+                        ),
+                      );
+                    });
+              },
+            );
+          },
+        ),
+        Divider(),
+        ListTile(
+          trailing: Icon(Icons.add),
+          title: Form(
+            key: _formTextboxKey,
+            child: TextFormField(
+              decoration: InputDecoration(hintText: "create a new list name..."),
+              keyboardType: TextInputType.text,
+              controller: _listController,
+              maxLines: 1,
+              onEditingComplete: saveList,
+              validator: (val) => val.isEmpty ? "Enter a listname" : null,
+            ),
+          ),
+        ),
+        Divider(),
+        ListTile(
+          title: Text("close"),
+          trailing: Icon(Icons.close),
+          onTap: () {
+            Navigator.pop(context);
+          },
+        ),
+        Divider(),
+        ListTile(
+          title: Text("log out"),
+          trailing: Icon(Icons.exit_to_app),
+          onTap: () {
+            loginNotifier.logOut();
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+            },
+        ),
+        Divider(),
+      ]);
+  }
+
   void saveList() async {
+    final LoginNotifier loginNotifier = Provider.of<LoginNotifier>(context);
     final formTextState = _formTextboxKey.currentState;
     final Firestore db = Firestore.instance;
     formTextState.save();
@@ -158,12 +157,12 @@ class _TaskListState extends State<TaskList> {
           await db.collection("listPermissions").add(
             {
               'listID': result,
-              'userID': Firestore.instance.collection('users').document(myuserid),
+              'userID': Firestore.instance.collection('users').document(loginNotifier.user.uid),
             }
           );
           });
       } catch (e) {
-        print(e.message);
+        print(e);
       }
       _listController.clear();
     }
