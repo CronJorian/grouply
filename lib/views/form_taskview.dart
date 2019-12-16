@@ -51,7 +51,7 @@ class _taskViewState extends State<TaskView> {
         backgroundColor: colors.primaryColor,
         drawer: Drawer(),
         appBar: AppBar(
-          title: Text('Aufgabe'),
+          title: Text('TaskView'),
           actions: <Widget>[
             IconButton(
               alignment: Alignment(-1, 0),
