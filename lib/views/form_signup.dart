@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +17,7 @@ class _FormSignUpState extends State<FormSignUp> {
   String _email;
   String _password;
   String _passwordConfirmation;
-  // String _username;
+  String _username;
   // String _firstName;
   // String _lastName;
 
@@ -41,6 +42,14 @@ class _FormSignUpState extends State<FormSignUp> {
                         .hasMatch(input)
                     ? null
                     : 'Dieses E-Mail-Format ist ungültig.',
+          ),
+          FormInput(
+            callbackSetter: (String value) => _username = value,
+            keyboardType: TextInputType.text,
+            labelText: 'Benutzername',
+            validator: (input) =>
+                input.trim().isEmpty ? 'Der Benutzername ist leer.' : null,
+            trimInput: true,
           ),
           FormInput(
             callbackSetter: (String value) => _password = value,
@@ -98,19 +107,36 @@ class _FormSignUpState extends State<FormSignUp> {
     final LoginNotifier loginNotifier = Provider.of<LoginNotifier>(context);
     final formSignUpState = _formSignUpKey.currentState;
     final FirebaseAuth _auth = FirebaseAuth.instance;
+    final Firestore _db = Firestore.instance;
 
     if (formSignUpState.validate()) {
       formSignUpState.save();
       try {
-        FirebaseUser result = (await _auth.createUserWithEmailAndPassword(
-          email: _email,
-          password: _password,
-        ))
-            .user;
-        loginNotifier.loginIn(result);
-        await Navigator.of(context).pushNamedAndRemoveUntil(
-          '/',
-          (Route<dynamic> route) => false,
+        await _db
+            .collection("users")
+            .where("username", isEqualTo: _username)
+            .getDocuments()
+            .then((result) async {
+          if (result.documents.isEmpty) {
+            FirebaseUser result = (await _auth.createUserWithEmailAndPassword(
+              email: _email,
+              password: _password,
+            ))
+                .user;
+            await _db
+                .collection("users")
+                .document(result.uid)
+                .setData({"username": _username});
+            loginNotifier.loginIn(result);
+            await Navigator.of(context).pushNamedAndRemoveUntil(
+              '/',
+              (Route<dynamic> route) => false,
+            );
+          }
+        }).catchError(
+          (error) => {
+            // TODO: Catch error for no internet connection, badly formatted email, wrong email, password combination, etc...
+          },
         );
       } catch (e) {
         print(e.message);
