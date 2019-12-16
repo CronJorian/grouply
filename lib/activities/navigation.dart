@@ -85,8 +85,6 @@ class _TaskListState extends State<TaskList> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => Checklist(
-                          // TODO: Listenname dynamisch machen
-                          // Dazu wird hier der Parameter "title" mit entsprechendem Wert übergeben.
                           listID: snapshot.data.documents[index]["listID"],
                         ),
                       ),
