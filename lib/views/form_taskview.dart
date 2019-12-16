@@ -311,7 +311,7 @@ class _taskViewState extends State<TaskView> {
                             },
                             textColor: Colors.black,
                             child: Text(
-                             formatDate(_endDate)),
+                             formatDate(_endDate.toDate())),
 
                             color: Colors.white,
                             //shape: RoundedRectangleBorder(side: BorderSide(color: Colors.white)),
