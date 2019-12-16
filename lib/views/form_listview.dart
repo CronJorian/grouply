@@ -5,12 +5,14 @@ import 'package:flutter/services.dart';
 import '../colors.dart';
 
 class Checklist extends StatefulWidget {
-  const Checklist({
+
+  const Checklist(this.listID, {
     this.label,
     this.padding,
     this.onChanged,
   });
 
+  final DocumentReference listID;
   final String label;
   final EdgeInsets padding;
   final ValueChanged<bool> onChanged;
@@ -22,6 +24,7 @@ class Checklist extends StatefulWidget {
 class _ChecklistState extends State<Checklist> {
   final GlobalKey<FormState> _formTextboxKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
+
 
   Widget buildListItem(BuildContext context, DocumentSnapshot document) {
     return Scaffold(
@@ -106,7 +109,7 @@ class _ChecklistState extends State<Checklist> {
         children: <Widget>[
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: Firestore.instance.collection('tasks').snapshots(),
+              stream: Firestore.instance.collection('tasks').where('listID', isEqualTo: this.widget.listID).snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Align(
