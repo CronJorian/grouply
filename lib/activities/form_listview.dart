@@ -6,14 +6,16 @@ import 'package:grouply/activities/navigation.dart';
 import '../colors.dart';
 
 class Checklist extends StatefulWidget {
-  const Checklist(
-    this.listID, {
+  const Checklist({
+    this.listID,
+    this.title,
     this.label,
     this.padding,
     this.onChanged,
   });
 
   final DocumentReference listID;
+  final String title;
   final String label;
   final EdgeInsets padding;
   final ValueChanged<bool> onChanged;
@@ -30,7 +32,7 @@ class _ChecklistState extends State<Checklist> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Listenname"), // TODO: Listenname dynamisch machen
+        title: Text(widget.title ?? "Listenname"),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.share),
@@ -154,6 +156,7 @@ class _ChecklistState extends State<Checklist> {
                   style: TextStyle(color: backgroundColor),
                 ),
                 trailing: IconButton(
+                  tooltip: "Eine Person zuweisen.",
                   icon: Icon(
                       Icons.insert_emoticon), // TODO: Add variable UserIcon
                   color: primaryColor,
@@ -196,7 +199,9 @@ class _ChecklistState extends State<Checklist> {
             'title': _titleController.text,
             'description': '',
             'complete': false,
-            'listID': this.widget.listID // TODO: ListenID muss hier immer mitgegeben werden!
+            'listID': this
+                .widget
+                .listID // TODO: ListenID muss hier immer mitgegeben werden!
           },
         );
       } catch (e) {

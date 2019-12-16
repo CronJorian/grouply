@@ -40,7 +40,7 @@ class _TaskListState extends State<TaskList> {
                 .document(loginNotifier.user?.uid)
                 .snapshots(),
             builder: (context, snapshot) {
-              if (!snapshot.hasData) return Text('Loading username...');
+              if (!snapshot.hasData) return Text('Benutzer wird geladen...');
               if (snapshot.hasError) {
                 return Text('Error beim laden des Benutzernamens.');
               }
@@ -75,7 +75,7 @@ class _TaskListState extends State<TaskList> {
                       stream:
                           snapshot.data.documents[index]["listID"].snapshots(),
                       builder: (context, snapshot) {
-                        if (!snapshot.hasData) return Text("Loading...");
+                        if (!snapshot.hasData) return Text("Wird geladen...");
                         return Text(snapshot.data["title"]);
                       }),
                   trailing: Icon(Icons.arrow_right),
@@ -84,8 +84,11 @@ class _TaskListState extends State<TaskList> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            Checklist(snapshot.data.documents[index]["listID"]),
+                        builder: (context) => Checklist(
+                          // TODO: Listenname dynamisch machen
+                          // Dazu wird hier der Parameter "title" mit entsprechendem Wert übergeben.
+                          listID: snapshot.data.documents[index]["listID"],
+                        ),
                       ),
                     );
                   });
@@ -122,7 +125,8 @@ class _TaskListState extends State<TaskList> {
         trailing: Icon(Icons.exit_to_app),
         onTap: () {
           loginNotifier.logOut();
-          Navigator.of(context).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              '/login', (Route<dynamic> route) => false);
         },
       ),
       Divider(),
