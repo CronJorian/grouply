@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class TaskView extends StatefulWidget {
   const TaskView({
@@ -198,10 +199,30 @@ class _taskViewState extends State<TaskView> {
                           Expanded(
                             child: 
                             FlatButton(
-                              onPressed: () => _selectStartDate(context),
-                              child: Text(formatDate(selectedDate)),
-                              color: Colors.white,
+                              //onPressed: () => _selectStartDate(context),
+                              //child: Text(formatDate(selectedDate)),
+                              // * SetState-Management: changing State within child
+                               onPressed: () {
+                                DatePicker.showDatePicker(context,
+                                  showTitleActions: true,
+                                  minTime: DateTime(2019, 12),
+                                  maxTime: DateTime(2028, 12), 
+                                  onChanged: (date) {
+                                    print('change $date');
+                                   },
+                                  onConfirm: (date) {
+                                    print('confirm $date');
+                                    setState(() {
+                                      selectedDate = date;
+                                    });
+                                  },
+                                  currentTime: DateTime.now(), locale: LocaleType.de,
+                                 );
+                              },
                               textColor: Colors.black,
+                              child: Text(formatDate(selectedDate)),
+
+                              color: Colors.white,
                               //shape: RoundedRectangleBorder(side: BorderSide(color: Colors.white)),
                             ),
                           ),
