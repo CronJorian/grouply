@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 
 import 'activities/home.dart';
 import 'activities/login.dart';
-import 'activities/todo.dart';
 import 'colors.dart';
 import 'notifiers/form_notifier.dart';
 import 'notifiers/login_notifier.dart';
@@ -23,7 +22,7 @@ class GrouplyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         theme: retroTheme,
-        initialRoute: '/tasklist',
+        initialRoute: '/login',
         home: Home(),
         routes: {
           // create all routes here
@@ -32,7 +31,6 @@ class GrouplyApp extends StatelessWidget {
           // https://flutter.dev/docs/cookbook/navigation/named-routes
           // you don't need to fully read these, but make sure you understand how to navigate
           '/login': (context) => Login(),
-          '/todolist': (context) => TodoList(),
           '/tasklist': (context) => Checklist(),
           // This deals as a placeholder for a possible default list
           '/home': (context) => Home(),

@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:grouply/views/form_taskview.dart';
 
 import '../colors.dart';
+import 'form_taskview.dart';
 
 class Checklist extends StatefulWidget {
   const Checklist({
@@ -34,7 +34,9 @@ class _ChecklistState extends State<Checklist> {
           children: <Widget>[
             Container(
               child: Theme(
-                data: ThemeData(unselectedWidgetColor: primaryColor),
+                data: ThemeData(
+                  unselectedWidgetColor: primaryColor,
+                ),
                 child: Checkbox(
                   activeColor: primaryColor,
                   value: document['complete'],
@@ -44,35 +46,41 @@ class _ChecklistState extends State<Checklist> {
             ),
             Expanded(
               child: ListTile(
-                  title: document['complete']
-                      ? Text(document['title'],
-                          style: TextStyle(
-                            decoration: TextDecoration.lineThrough,
-                            color: primaryColor,
-                          ))
-                      : Text(
-                          document['title'],
-                          style: TextStyle(color: primaryColor),
+                title: document['complete']
+                    ? Text(
+                        document['title'],
+                        style: TextStyle(
+                          decoration: TextDecoration.lineThrough,
+                          color: primaryColor,
                         ),
-                  subtitle: Text(
-                    document['description'],
-                  ),
-                  trailing: IconButton(
-                    icon: Icon(
-                        Icons.insert_emoticon), // TODO: Add variable UserIcon
-                    color: primaryColor,
-                    iconSize: 35.0,
-                    onPressed: () => {}, // TODO: Personenauswahl
-                  ),
-                  onTap: () {
-                    //Aufruf der Detailansicht
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                TaskView(document: document)));
-                  } // TODO: Aufruf der Detailansicht.
-                  ),
+                      )
+                    : Text(
+                        document['title'],
+                        style: TextStyle(
+                          color: primaryColor,
+                        ),
+                      ),
+                subtitle: Text(
+                  document['description'],
+                ),
+                trailing: IconButton(
+                  icon: Icon(
+                    Icons.insert_emoticon,
+                  ), // TODO: Add variable UserIcon
+                  color: primaryColor,
+                  iconSize: 35.0,
+                  onPressed: () => {}, // TODO: Personenauswahl
+                ),
+                onTap: () {
+                  //Aufruf der Detailansicht
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TaskView(document: document),
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
