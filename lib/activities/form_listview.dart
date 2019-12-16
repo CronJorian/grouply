@@ -151,6 +151,7 @@ class _ChecklistState extends State<Checklist> {
                       ),
                 subtitle: Text(
                   document['description'],
+                  style: TextStyle(color: backgroundColor),
                 ),
                 trailing: IconButton(
                   icon: Icon(
@@ -195,7 +196,7 @@ class _ChecklistState extends State<Checklist> {
             'title': _titleController.text,
             'description': '',
             'complete': false,
-            //'listid': _listcontroller  // TODO: ListenID muss hier immer mitgegeben werden!
+            'listID': this.widget.listID // TODO: ListenID muss hier immer mitgegeben werden!
           },
         );
       } catch (e) {
