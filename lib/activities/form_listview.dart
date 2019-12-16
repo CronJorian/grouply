@@ -9,16 +9,10 @@ class Checklist extends StatefulWidget {
   const Checklist({
     this.listID,
     this.title,
-    this.label,
-    this.padding,
-    this.onChanged,
   });
 
   final DocumentReference listID;
-  final String title;
-  final String label;
-  final EdgeInsets padding;
-  final ValueChanged<bool> onChanged;
+  final DocumentReference title;
 
   @override
   _ChecklistState createState() => _ChecklistState();
@@ -32,7 +26,13 @@ class _ChecklistState extends State<Checklist> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title ?? "Listenname"),
+        title: StreamBuilder<DocumentSnapshot>(
+          stream: Firestore.instance
+            .collection('lists').document(this.widget.listID.documentID).snapshots(),
+          builder: (context, snapshot){
+            return Text(snapshot.data["title"] ?? "Listenname");    
+          },
+        ),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.share),
@@ -201,7 +201,7 @@ class _ChecklistState extends State<Checklist> {
             'complete': false,
             'listID': this
                 .widget
-                .listID // TODO: ListenID muss hier immer mitgegeben werden!
+                .listID 
           },
         );
       } catch (e) {
