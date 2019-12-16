@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'activities/form_listview.dart';
 import 'activities/home.dart';
 import 'activities/login.dart';
+import 'activities/navigation.dart';
 import 'colors.dart';
 import 'notifiers/form_notifier.dart';
 import 'notifiers/login_notifier.dart';
-import 'views/form_listview.dart';
 
 class GrouplyApp extends StatelessWidget {
   @override
@@ -31,7 +32,8 @@ class GrouplyApp extends StatelessWidget {
           // https://flutter.dev/docs/cookbook/navigation/named-routes
           // you don't need to fully read these, but make sure you understand how to navigate
           '/login': (context) => Login(),
-          '/tasklist': (context) => Checklist(),
+          '/taskCard': (context) => TaskList(),
+          '/tasklist': (context) => Checklist(listID: null),
           // This deals as a placeholder for a possible default list
           '/home': (context) => Home(),
         },
