@@ -6,17 +6,11 @@ import 'package:grouply/activities/navigation.dart';
 import '../colors.dart';
 
 class Checklist extends StatefulWidget {
-  const Checklist(
-    this.listID, {
-    this.label,
-    this.padding,
-    this.onChanged,
+  const Checklist({
+    this.listID,
   });
 
   final DocumentReference listID;
-  final String label;
-  final EdgeInsets padding;
-  final ValueChanged<bool> onChanged;
 
   @override
   _ChecklistState createState() => _ChecklistState();
@@ -30,7 +24,13 @@ class _ChecklistState extends State<Checklist> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Listenname"), // TODO: Listenname dynamisch machen
+        title: StreamBuilder<DocumentSnapshot>(
+          stream: Firestore.instance
+            .collection('lists').document(this.widget.listID.documentID).snapshots(),
+          builder: (context, snapshot){
+            return Text(snapshot.data["title"] ?? "Listenname");    
+          },
+        ),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.share),
@@ -151,8 +151,10 @@ class _ChecklistState extends State<Checklist> {
                       ),
                 subtitle: Text(
                   document['description'],
+                  style: TextStyle(color: backgroundColor),
                 ),
                 trailing: IconButton(
+                  tooltip: "Eine Person zuweisen.",
                   icon: Icon(
                       Icons.insert_emoticon), // TODO: Add variable UserIcon
                   color: primaryColor,
@@ -195,7 +197,9 @@ class _ChecklistState extends State<Checklist> {
             'title': _titleController.text,
             'description': '',
             'complete': false,
-            //'listid': _listcontroller  // TODO: ListenID muss hier immer mitgegeben werden!
+            'listID': this
+                .widget
+                .listID 
           },
         );
       } catch (e) {
