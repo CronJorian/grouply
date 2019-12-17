@@ -36,16 +36,6 @@ class _taskViewState extends State<TaskView> {
       drawer: TaskList(),
       appBar: AppBar(
         title: Text('TaskView'),
-        actions: <Widget>[
-          IconButton(
-            alignment: Alignment(-1, 0),
-            icon: Icon(
-              Icons.share,
-            ),
-            color: Colors.white,
-            onPressed: () {},
-          ),
-        ],
       ),
       body: StreamBuilder<DocumentSnapshot>(
         stream: Firestore.instance

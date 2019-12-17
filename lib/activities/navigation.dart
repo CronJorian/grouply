@@ -65,6 +65,7 @@ class _TaskListState extends State<TaskList> {
         builder: (context, snapshot) {
           if (!snapshot.hasData) return LinearProgressIndicator();
           return ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
             itemCount: snapshot.data.documents.length,
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
@@ -97,7 +98,10 @@ class _TaskListState extends State<TaskList> {
       ),
       Divider(),
       ListTile(
-        trailing: Icon(Icons.add),
+        trailing: IconButton(
+          icon: Icon(Icons.add),
+          onPressed: saveList,
+        ),
         title: Form(
           key: _formTextboxKey,
           child: TextFormField(
