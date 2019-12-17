@@ -20,6 +20,7 @@ class Checklist extends StatefulWidget {
 class _ChecklistState extends State<Checklist> {
   final GlobalKey<FormState> _formTextboxKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +39,41 @@ class _ChecklistState extends State<Checklist> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.share),
-            onPressed: () => {}, // TODO: Liste teilen
+            onPressed: () => {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: TextField(
+                      decoration: InputDecoration(
+                        hintText: "Benutzername eingeben...",
+                      ),
+                      controller: _usernameController,
+                    ),
+                    actions: <Widget>[
+                      RaisedButton(
+                        child: Text("BESTÄTIGEN"),
+                        onPressed: () async {
+                          final db = Firestore.instance;
+                          // Check if username exists
+                          final users = await db.collection('users').where('username', isEqualTo: _usernameController.text).getDocuments();
+                          if(users.documents.length != 1) return;
+                          // Check if user has access to list already
+                          final entries = await db.collection('listPermissions').where('listID', isEqualTo: this.widget.listID).where('userID', isEqualTo: users.documents[0].reference).getDocuments();
+                          if(entries.documents.isNotEmpty) return;
+                          await db.collection('listPermissions').add(
+                            {
+                              'userID': users.documents[0].reference,
+                              'listID': this.widget.listID,
+                            },
+                          );
+                        },
+                      ),
+                    ],
+                  );
+                },
+              )
+            }, // TODO: Liste teilen
           ),
           PopupMenuButton<String>(
             onSelected: choiceAction,
