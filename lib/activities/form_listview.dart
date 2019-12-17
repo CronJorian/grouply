@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:grouply/activities/navigation.dart';
 
+import '../activities/form_taskview.dart';
+import '../activities/navigation.dart';
 import '../colors.dart';
 
 class Checklist extends StatefulWidget {
@@ -26,9 +27,12 @@ class _ChecklistState extends State<Checklist> {
       appBar: AppBar(
         title: StreamBuilder<DocumentSnapshot>(
           stream: Firestore.instance
-            .collection('lists').document(this.widget.listID.documentID).snapshots(),
-          builder: (context, snapshot){
-            return Text(snapshot.data["title"] ?? "Listenname");    
+              .collection('lists')
+              .document(this.widget.listID.documentID)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) return Text('Lade...');
+            return Text(snapshot.data["title"] ?? "Listenname");
           },
         ),
         actions: <Widget>[
@@ -139,30 +143,35 @@ class _ChecklistState extends State<Checklist> {
           ),
           Expanded(
             child: ListTile(
-                title: document['complete']
-                    ? Text(document['title'],
-                        style: TextStyle(
-                          decoration: TextDecoration.lineThrough,
-                          color: primaryColor,
-                        ))
-                    : Text(
-                        document['title'],
-                        style: TextStyle(color: primaryColor),
-                      ),
-                subtitle: Text(
-                  document['description'],
-                  style: TextStyle(color: backgroundColor),
-                ),
-                trailing: IconButton(
-                  tooltip: "Eine Person zuweisen.",
-                  icon: Icon(
-                      Icons.insert_emoticon), // TODO: Add variable UserIcon
+              title: Text(
+                document['title'],
+                style: TextStyle(
+                  decoration:
+                      document['complete'] ? TextDecoration.lineThrough : null,
                   color: primaryColor,
-                  iconSize: 35.0,
-                  onPressed: () => {}, // TODO: Personenauswahl
                 ),
-                onTap: () {} // TODO: Aufruf der Detailansicht.
-                ),
+              ),
+              subtitle: Text(
+                document['description'],
+                style: TextStyle(color: backgroundColor),
+              ),
+              trailing: IconButton(
+                tooltip: "Eine Person zuweisen.",
+                icon:
+                    Icon(Icons.insert_emoticon), // TODO: Add variable UserIcon
+                color: primaryColor,
+                iconSize: 35.0,
+                onPressed: () => {}, // TODO: Personenauswahl
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TaskView(document: document),
+                  ),
+                );
+              },
+            ),
           ),
         ],
       ),
@@ -197,9 +206,7 @@ class _ChecklistState extends State<Checklist> {
             'title': _titleController.text,
             'description': '',
             'complete': false,
-            'listID': this
-                .widget
-                .listID 
+            'listID': this.widget.listID
           },
         );
       } catch (e) {
