@@ -97,7 +97,10 @@ class _TaskListState extends State<TaskList> {
       ),
       Divider(),
       ListTile(
-        trailing: Icon(Icons.add),
+        trailing: IconButton(
+          icon: Icon(Icons.add),
+          onPressed: saveList,
+        ),
         title: Form(
           key: _formTextboxKey,
           child: TextFormField(
