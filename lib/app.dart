@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'activities/form_listview.dart';
+import 'activities/form_taskview.dart';
 import 'activities/home.dart';
 import 'activities/login.dart';
 import 'activities/navigation.dart';
@@ -34,6 +35,7 @@ class GrouplyApp extends StatelessWidget {
           '/login': (context) => Login(),
           '/taskCard': (context) => TaskList(),
           '/tasklist': (context) => Checklist(listID: null),
+          '/taskview': (context) => TaskView(document: null),
           // This deals as a placeholder for a possible default list
           '/home': (context) => Home(),
         },

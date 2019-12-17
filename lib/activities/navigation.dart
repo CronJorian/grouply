@@ -76,7 +76,8 @@ class _TaskListState extends State<TaskList> {
                           snapshot.data.documents[index]["listID"].snapshots(),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) return Text("Wird geladen...");
-                        return Text(snapshot.data["title"]);
+                        return Text(
+                            snapshot.data["title"] ?? "Kein Titel vorhanden.");
                       }),
                   trailing: Icon(Icons.arrow_right),
                   onTap: () {

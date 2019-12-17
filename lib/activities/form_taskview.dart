@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:grouply/activities/navigation.dart';
 import 'package:intl/intl.dart';
 
 import '../colors.dart' as colors;
@@ -32,7 +33,7 @@ class _taskViewState extends State<TaskView> {
   Widget build(BuildContext document) {
     return Scaffold(
       backgroundColor: colors.primaryColor,
-      drawer: Drawer(),
+      drawer: TaskList(),
       appBar: AppBar(
         title: Text('TaskView'),
         actions: <Widget>[
