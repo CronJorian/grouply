@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:grouply/notifiers/login_notifier.dart';
+import 'package:provider/provider.dart';
 
 import '../activities/form_taskview.dart';
 import '../activities/navigation.dart';
@@ -56,11 +58,20 @@ class _ChecklistState extends State<Checklist> {
                         onPressed: () async {
                           final db = Firestore.instance;
                           // Check if username exists
-                          final users = await db.collection('users').where('username', isEqualTo: _usernameController.text).getDocuments();
-                          if(users.documents.length != 1) return;
+                          final users = await db
+                              .collection('users')
+                              .where('username',
+                                  isEqualTo: _usernameController.text)
+                              .getDocuments();
+                          if (users.documents.length != 1) return;
                           // Check if user has access to list already
-                          final entries = await db.collection('listPermissions').where('listID', isEqualTo: this.widget.listID).where('userID', isEqualTo: users.documents[0].reference).getDocuments();
-                          if(entries.documents.isNotEmpty) return;
+                          final entries = await db
+                              .collection('listPermissions')
+                              .where('listID', isEqualTo: this.widget.listID)
+                              .where('userID',
+                                  isEqualTo: users.documents[0].reference)
+                              .getDocuments();
+                          if (entries.documents.isNotEmpty) return;
                           await db.collection('listPermissions').add(
                             {
                               'userID': users.documents[0].reference,
@@ -213,8 +224,42 @@ class _ChecklistState extends State<Checklist> {
     );
   }
 
-  void choiceAction(String choice) {
-    print('Verlinkung einfügen'); // TODO: Verlinkung zu Menüpunkten
+  void choiceAction(String choice) async {
+    final LoginNotifier loginNotifier = Provider.of<LoginNotifier>(context);
+    Firestore db = Firestore.instance;
+    switch (choice) {
+      case 'Liste löschen':
+        final uid = await db.collection('users').document(loginNotifier.user.uid);
+        final docs = await db
+            .collection('listPermissions')
+            .where('listID', isEqualTo: this.widget.listID)
+            .where('userID', isEqualTo: uid)
+            .getDocuments()
+            .then((result) async {
+          if (result.documents.length != 1) {
+            print(result.documents.length);
+            print(this.widget.listID);
+            print(uid);
+            result.documents.forEach((doc) {
+              print(doc.documentID);
+            });
+            print('listPermission is ambiguous');
+            return;
+          }
+          final listPermission = result.documents[0];
+          await db
+              .collection('listPermissions')
+              .document(listPermission.documentID)
+              .delete()
+              .whenComplete(() async {
+            await Navigator.of(context)
+                .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+          });
+        });
+        break;
+      default:
+        print('Verlinkung einfügen'); // TODO: Verlinkung zu Menüpunkten
+    }
   }
 
   BoxDecoration myBoxDecoration() {
