@@ -237,9 +237,6 @@ class _ChecklistState extends State<Checklist> {
             .getDocuments()
             .then((result) async {
           if (result.documents.length != 1) {
-            print(result.documents.length);
-            print(this.widget.listID);
-            print(uid);
             result.documents.forEach((doc) {
               print(doc.documentID);
             });
